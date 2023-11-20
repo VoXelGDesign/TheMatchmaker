@@ -13,6 +13,11 @@ public record UserName
             throw new ArgumentException($"Name cannot be longer than {UserValidationProperties.MaxNameLength} characters.");
         }
 
+        if (UserValidationProperties.MinNameLength > name.Length)
+        {
+            throw new ArgumentException($"Name cannot be shorter than {UserValidationProperties.MinNameLength} characters.");
+        }
+
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentException("Name cannot be null or empty.");
