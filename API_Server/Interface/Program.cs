@@ -9,6 +9,17 @@ using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5026", "https://localhost:7284")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 // Auth
 
 builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
@@ -69,6 +80,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowMyOrigin");
 
 using (var scope = app.Services.CreateScope())
 {
