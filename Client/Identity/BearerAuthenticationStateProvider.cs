@@ -4,8 +4,7 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using Client.Identity.Models;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using System.Net.Http;
+
 
 
 namespace Client.Identity
@@ -28,11 +27,14 @@ namespace Client.Identity
         private readonly ClaimsPrincipal Unauthenticated =
             new(new ClaimsIdentity());
 
+        //private readonly NotificationService _notificationService;
 
-        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage)
+
+        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage /*NotificationService notificationService*/)
         {
             _httpClient = httpClientFactory.CreateClient("Auth");
             _localStorage = localStorage;
+            //_notificationService = notificationService;
         }
 
         public async Task<FormResult> RegisterAsync(string email, string password)
@@ -100,6 +102,7 @@ namespace Client.Identity
 
             if (!result.IsSuccessStatusCode)
             {
+                //_notificationService.Notify(Notyfications.ErrorNotyfication("Invalid email and/or password."));
                 return new FormResult { Succeeded = false, ErrorList = ["Invalid email and/or password."] };
             }
 
@@ -107,7 +110,9 @@ namespace Client.Identity
 
             if (loginResponse == null)
             {
-                return new FormResult { Succeeded = false, ErrorList = ["Invalid email and/or password."] };
+                //_notificationService.Notify(Notyfications.ErrorNotyfication("Invalid email and/or password."));
+                
+                return new FormResult { Succeeded = false, ErrorList = ["Invalid email and/or password."] };            
             }
 
             await _localStorage.SetItemAsStringAsync("TokenType", loginResponse.TokenType);
@@ -115,7 +120,7 @@ namespace Client.Identity
             await _localStorage.SetItemAsStringAsync("ExpiresIn", loginResponse.ExpiresIn.ToString());
             await _localStorage.SetItemAsStringAsync("RefreshToken", loginResponse.RefreshToken);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-
+            //_notificationService.Notify(Notyfications.SuccessNotyfication("Loged in successfully!"));
             return new FormResult { Succeeded = true };
 
         }
@@ -173,6 +178,7 @@ namespace Client.Identity
             await _localStorage.RemoveItemAsync("ExpiresIn");
             await _localStorage.RemoveItemAsync("RefreshToken");
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            //_notificationService.Notify(Notyfications.SuccessNotyfication("Loged out successfully!"));
         }
 
 

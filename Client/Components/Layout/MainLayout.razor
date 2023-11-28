@@ -1,23 +1,51 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    Logged in as @context.User.Identity?.Name. <a href="logout"><span class="bi bi-door-closed-fill" aria-hidden="true" style="vertical-align:middle"></span> Logout</a>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="login"><span class="bi bi-door-open" aria-hidden="true" style="vertical-align:middle"></span> Login</a>
-                    <a href="register"><span class="bi bi-pencil-square" aria-hidden="true" style="vertical-align:middle"></span> Register</a>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
+﻿@using Client.Identity
+@inherits LayoutComponentBase
+@inject IAccountManagement Acct
+<MudThemeProvider Theme="_themeManager.Theme" />
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<MudLayout>
+    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
+    <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
+    <MudAppBar Elevation="_themeManager.AppBarElevation">
+        <MudText Typo="Typo.h5" Class="ml-3">TheMatchmaker</MudText>
+        <MudSpacer />
+        <MudButton>LOGIN</MudButton>
+        <MudButton>REGISTER</MudButton>
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+
+    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    public bool _themeManagerOpen = false;
+
+    void OpenThemeManager(bool value)
+    {
+        _themeManagerOpen = value;
+    }
+
+    void UpdateTheme(ThemeManagerTheme value)
+    {
+        _themeManager = value;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+
+
+    private async Task Logout()
+    {
+        if (await Acct.CheckAuthenticatedAsync())
+        {
+            await Acct.LogoutAsync();
+        }
+    }
+}

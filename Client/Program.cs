@@ -5,7 +5,8 @@ using Client.Components;
 using Client.Identity;
 using Client;
 using Blazored.LocalStorage;
-using Microsoft.Extensions.Http;
+using MudBlazor.Services;
+
 
 
 
@@ -14,6 +15,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+
+builder.Services.AddMudServices();
 builder.Services.AddScoped<BearerHandler>();
 
 // set up authorization
@@ -25,6 +28,8 @@ builder.Services.AddScoped<AuthenticationStateProvider, BearerAuthenticationStat
 // register the account management interface
 builder.Services.AddScoped(
     sp => (IAccountManagement)sp.GetRequiredService<AuthenticationStateProvider>());
+
+
 
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 
