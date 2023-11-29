@@ -31,6 +31,7 @@ builder.Services.AddScoped(
 
 
 
+
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 // set base address for default host
@@ -42,3 +43,4 @@ builder.Services.AddHttpClient("Auth", client =>
 
 
 await builder.Build().RunAsync();
+

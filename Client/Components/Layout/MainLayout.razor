@@ -1,19 +1,34 @@
 ﻿@using Client.Identity
 @inherits LayoutComponentBase
 @inject IAccountManagement Acct
-<MudThemeProvider Theme="_themeManager.Theme" />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 <MudLayout>
-    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-    <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
-    <MudAppBar Elevation="_themeManager.AppBarElevation">
-        <MudText Typo="Typo.h5" Class="ml-3">TheMatchmaker</MudText>
+    <MudAppBar Color=Color.Primary Elevation="10" Class="mb-4">
+        
         <MudSpacer />
-        <MudButton>LOGIN</MudButton>
-        <MudButton>REGISTER</MudButton>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
-    </MudAppBar>
-    <MudMainContent>
+        <AuthorizeView>
+
+            <Authorized>              
+                <MudCard Class="ma-2" Elevation="4">
+                    <MudText Class="ma-2" Color="Color.Primary"><b>@context.User.Identity?.Name.ToUpper()</b></MudText>
+                </MudCard>
+                <MudButton Size="Size.Large" OnClick="Logout">LOGOUT</MudButton>
+              
+            </Authorized>
+
+            <NotAuthorized>
+                <MudButton Size="Size.Large" Href="register">REGISTER</MudButton>
+                <MudButton Size="Size.Large" Href="login">LOGIN</MudButton>               
+            </NotAuthorized>
+
+        </AuthorizeView>   
+    </MudAppBar>  
+    
+    <MudMainContent> 
+        <NavMenu></NavMenu>
         @Body
     </MudMainContent>
 </MudLayout>
@@ -21,24 +36,8 @@
 
 @code {
 
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
-    public bool _themeManagerOpen = false;
-
-    void OpenThemeManager(bool value)
-    {
-        _themeManagerOpen = value;
-    }
-
-    void UpdateTheme(ThemeManagerTheme value)
-    {
-        _themeManager = value;
-        StateHasChanged();
-    }
-
-    protected override void OnInitialized()
-    {
-        StateHasChanged();
-    }
+    private bool _isDarkMode = true;
+    private MudTheme _theme = new();
 
 
     private async Task Logout()

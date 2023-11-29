@@ -1,111 +1,167 @@
 ﻿@page "/register"
 @using Client.Identity
 @inject IAccountManagement Acct
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
+
 
 <AuthorizeView>
     <Authorized>
-        <div class="alert alert-success">You're already logged in as @context.User.Identity?.Name.</div>
+
     </Authorized>
     <NotAuthorized>
-        @if (success)
-        {
-            <div class="alert alert-success">You successfully registered. Now you can <a href="login">login</a>.</div>
-        }
-        else
-        {
-            if (errors)
-            {
-                foreach (var error in errorList)
-                {
-                    <div class="alert alert-danger">@error</div>
-                }
-            }
-            <div class="flex-outer">
-                <div>
-                    <label for="email">
-                        Email:
-                    </label>
-                    <input autofocus autocomplete="on" required id="email" name="emailInput" placeholder="Enter your email address" type="email" @bind-value="email" />
-                </div>
-                <div>
-                    <label for="password">
-                        Password:
-                    </label>
-                    <input required id="password" name="passwordInput" placeholder="Enter your password" type="password" @bind-value="password" /><br />
-                </div>
-                <div>
-                    <label for="confirmPassword">
-                        Retype password:
-                    </label>
-                    <input required id="confirmPassword" name="confirmPasswordInput" placeholder="Re-enter your password" type="password" @bind-value="confirmPassword" />
-                </div>
-                <div>
-                    <button class="btn btn-primary" @onclick="DoRegisterAsync">Register</button>
-                </div>
-            </div>
-        }
+
+
+        <MudCard Elevation="5" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%;">
+            <MudCardHeader ><h1>Create new account.</h1></MudCardHeader>
+            <MudForm Model="@model" @ref="@form" Validation="@(registerValidator.ValidateValue)" ValidationDelay="0">
+                <MudCardContent>
+
+
+                    <MudTextField @bind-Value="model.Email"
+                                  For="@(() => model.Email)"
+                                  Immediate="true"
+                                  Label="Email" />
+
+                    <MudTextField @bind-Value="model.Password"
+                                  For="@(() => model.Password)"
+                                  InputType="InputType.Password"
+                                  Immediate="true"
+                                  Label="Password" 
+                                  HelperText="ex. johndoe@gmail.com"
+                                  Variant="Variant.Filled"/>
+
+                    <MudTextField @bind-Value="model.ConfirmPassword"
+                                  For="@(() => model.ConfirmPassword)"
+                                  InputType="InputType.Password"
+                                  Immediate="true"
+                                  Label="Confirm Password"
+                                  HelperText="ex. Thematchmaker123!"
+                                  Variant="Variant.Filled" />
+
+                </MudCardContent>
+
+            </MudForm>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">REGISTER</MudButton>
+            </MudCardActions>
+        </MudCard>
+
     </NotAuthorized>
 </AuthorizeView>
 
+
 @code {
-    private bool success, errors;
-    private string email = string.Empty;
-    private string password = string.Empty;
-    private string confirmPassword = string.Empty;
-    private string[] errorList = [];
+    MudForm form;
+    RegisterModelFluentValidator registerValidator = new();
+    RegisterModel model = new();
 
-    public async Task DoRegisterAsync()
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+
+    public record RegisterModel
     {
-        success = errors = false;
-        errorList = [];
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+    }
 
-        if (string.IsNullOrWhiteSpace(email))
+    public class RegisterModelFluentValidator : AbstractValidator<RegisterModel>
+    {
+        public RegisterModelFluentValidator()
         {
-            errors = true;
-            errorList = ["Email is required."];
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .Length(1, 100)
+                .EmailAddress()
+                .WithMessage("Please enter correct email address");
 
-            return;
+            RuleFor(x => x.Password)
+                .NotEmpty();
+
+            RuleFor(x => x.Password)               
+                .MinimumLength(8)
+                .WithMessage("Password must be at least 8 characters long.")
+                .Must(HaveAtLeastOneDigit)
+                .WithMessage("Password must contain at least one digit.")
+                .Must(HaveAtLeastOneLowercaseLetter)
+                .WithMessage("Password must contain at least one lowercase letter.")
+                .Must(HaveAtLeastOneUppercaseLetter)
+                .WithMessage("Password must contain at least one uppercase letter.")
+                .Must(HaveAtLeastOneUniqueNonAlphanumericCharacter)
+                .WithMessage("Password must contain at least one unique non-alphanumeric character.");
+
+            RuleFor(x => x.ConfirmPassword)
+            .Equal(x => x.Password)
+            .WithMessage("Passwords are different.");
+
+            bool HaveAtLeastOneDigit(string password)
+            {
+                return password.Any(char.IsDigit);
+            }
+
+            bool HaveAtLeastOneLowercaseLetter(string password)
+            {
+                return password.Any(char.IsLower);
+            }
+
+            bool HaveAtLeastOneUppercaseLetter(string password)
+            {
+                return password.Any(char.IsUpper);
+            }
+
+            bool HaveAtLeastOneUniqueNonAlphanumericCharacter(string password)
+            {
+                var nonAlphanumericCharacters = password.Where(c => !char.IsLetterOrDigit(c)).Distinct();
+                return nonAlphanumericCharacters.Count() >= 1;
+            }
+
         }
 
-        if (string.IsNullOrWhiteSpace(password))
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            errors = true;
-            errorList = ["Password is required."];
+            var result = await ValidateAsync(ValidationContext<RegisterModel>.CreateWithOptions((RegisterModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
 
-            return;
-        }
+    }
 
-        if (string.IsNullOrWhiteSpace(confirmPassword))
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        if (authState.User.Identity.IsAuthenticated)
         {
-            errors = true;
-            errorList = ["Please confirm your password."];
-
-            return;
-        }
-
-        if (password != confirmPassword)
-        {
-            errors = true;
-            errorList = ["Passwords don't match."];
-
-            return;
-        }
-
-        var result = await Acct.RegisterAsync(email!, password!);
-
-        if (result.Succeeded)
-        {
-            success = true;
-            email = password = confirmPassword = string.Empty;
-        }
-        else
-        {
-            errors = true;
-            errorList = result.ErrorList;
+            NavigationManager.NavigateTo("/");
         }
     }
+
+    private async Task Submit()
+    {
+        await form.Validate();
+        var result = await Acct.RegisterAsync(model.Email!, model.Password!);
+
+        if (!form.IsValid)
+        {
+            Snackbar.Add("Form is not valid!", MudBlazor.Severity.Error);
+            return;
+        }
+
+        if (!result.Succeeded)
+        {
+            Snackbar.Add("Registration failed!", MudBlazor.Severity.Error);
+            return;
+        }
+
+        Snackbar.Add("Registered!", MudBlazor.Severity.Success);
+    }
+
+
+
 }
