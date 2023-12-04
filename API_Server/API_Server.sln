@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface", "Interface\Interface.csproj", "{EE6F4804-F5A3-44D2-BFCC-30DCC75FBB48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "Interface\Interface.csproj", "{EE6F4804-F5A3-44D2-BFCC-30DCC75FBB48}"
 	ProjectSection(ProjectDependencies) = postProject
 		{09F48EFE-7564-48E9-8604-039F91CEFD48} = {09F48EFE-7564-48E9-8604-039F91CEFD48}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{019AE2A0-B24B-44C8-9852-C83877B6C336}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{019AE2A0-B24B-44C8-9852-C83877B6C336}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11} = {ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{09F48EFE-7564-48E9-8604-039F91CEFD48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{09F48EFE-7564-48E9-8604-039F91CEFD48}"
 	ProjectSection(ProjectDependencies) = postProject
 		{019AE2A0-B24B-44C8-9852-C83877B6C336} = {019AE2A0-B24B-44C8-9852-C83877B6C336}
 		{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11} = {ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}
