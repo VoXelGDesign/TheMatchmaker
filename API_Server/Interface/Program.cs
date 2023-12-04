@@ -1,9 +1,10 @@
-using Domain.Users;
+using Application.Middleware;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,7 +46,14 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 
 // End Auth
 
-//builder.Services.AddControllers();
+builder.Services.AddControllers();
+builder.Services.AddMediatR(options => 
+    options.RegisterServicesFromAssemblies(
+        Assembly.GetExecutingAssembly(),
+        Assembly.GetAssembly(typeof(Application.Users.UserAccount.Commands.GetUserAccountInfoCommand))!
+        ));
+
+builder.Services.AddScoped(s => s.GetService<IHttpContextAccessor>()!.HttpContext!.User!);
 
 //Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -68,8 +76,9 @@ var app = builder.Build();
 
 app.MapIdentityApi<IdentityUser>();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.MapGet("/", (ClaimsPrincipal user) => $"Hello {user.Identity!.Name}").RequireAuthorization();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -101,3 +110,5 @@ using (var scope = app.Services.CreateScope())
 
 
 app.Run();
+
+
