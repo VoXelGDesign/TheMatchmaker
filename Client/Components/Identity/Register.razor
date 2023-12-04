@@ -15,7 +15,7 @@
     <NotAuthorized>
 
 
-        <MudCard Elevation="5" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%;">
+        <MudCard Elevation="5" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%; min-width: 300px;">
             <MudCardHeader ><h1>Create new account.</h1></MudCardHeader>
             <MudForm Model="@model" @ref="@form" Validation="@(registerValidator.ValidateValue)" ValidationDelay="0">
                 <MudCardContent>

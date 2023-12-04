@@ -15,7 +15,7 @@
 
         
 
-        <MudCard Elevation="10" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%;">
+        <MudCard Elevation="10" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%; min-width: 300px;">
             <MudCardHeader><h2>Login to your account.</h2></MudCardHeader>
             <MudForm Model="@model" @ref="@form" Validation="@(loginValidator.ValidateValue)" ValidationDelay="0">
                 <MudCardContent>
@@ -69,7 +69,7 @@
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .Length(1, 100)
-                .EmailAddress()
+                .Matches(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
                 .WithMessage("Please enter correct email address");
 
             RuleFor(x => x.Password)
