@@ -4,23 +4,31 @@
 
 <PageTitle>Private Page</PageTitle>
 
-<h1>Private Page</h1>
+<MudPaper Class="mt-15 mx-15 d-flex flex-grow-1 gap-4" Elevation="0">
 
-<AuthorizeView>
-    <p>Hello, @context.User.Identity?.Name! You're authenticated, so you can see this page that shows your claims.</p>
-</AuthorizeView>
 
-<h2>Claims</h2>
+    <MudCardHeader>
+        <h1>Account</h1>
+    </MudCardHeader>
 
-@if (claims.Count() > 0)
-{
-    <ul>
-        @foreach (var claim in claims)
-        {
-            <li><b>@claim.Type:</b> @claim.Value</li>
-        }
-    </ul>
-}
+    <AuthorizeView>
+        <p>Hello, @context.User.Identity?.Name! You're authenticated, so you can see this page that shows your claims.</p>
+    </AuthorizeView>
+
+    <h2>Claims</h2>
+
+    @if (claims.Count() > 0)
+    {
+        <ul>
+            @foreach (var claim in claims)
+            {
+                var claimType = claim.Type.Replace("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/", "");
+                <li><b>@claimType:</b> @claim.Value</li>
+            }
+        </ul>
+    }
+
+</MudPaper>
 
 @code {
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
