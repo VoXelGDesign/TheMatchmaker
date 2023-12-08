@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Application.Users.UserAccount.Commands;
 
-public record UpdateUserAccountInfoDto(string? Name = null, string? SteamProfileLink = null);
+public record UpdateUserAccountInfoDto(string? Name = null, string? SteamProfileLink = null, string? DiscordName = null);
 
 public record UpdateUserAccountInfoCommand(UpdateUserAccountInfoDto dto) : IRequest<UpdateUserAccountInfoDto>;
 
@@ -37,12 +37,15 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
 
         var link = UserAccountSteamProfileLink.Create(request.dto.SteamProfileLink);
 
+        var discordName = UserDiscordName.Create(request.dto.DiscordName);
+
         if (userAccountInfo == null)
         {
             userAccountInfo = Domain.Users.UserAccounts.UserAccount.Create(
                 userAccountId,
                 name ?? UserAccountName.Default(),
-                link ?? UserAccountSteamProfileLink.Default())
+                link ?? UserAccountSteamProfileLink.Default(),
+                discordName ?? UserDiscordName.Default())
                 ?? throw new ResourceCreationFailed();
 
             _applicationDbContext.UserAccounts.Add(userAccountInfo);

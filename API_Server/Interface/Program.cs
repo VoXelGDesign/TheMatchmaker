@@ -76,7 +76,7 @@ var app = builder.Build();
 
 app.MapIdentityApi<IdentityUser>();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseExceptionHandlingMiddleware();
 
 app.MapControllers();
 

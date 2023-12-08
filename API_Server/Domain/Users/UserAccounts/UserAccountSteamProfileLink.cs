@@ -2,14 +2,14 @@
 
 namespace Domain.Users.UserAccounts;
 
-public record UserAccountSteamProfileLink
+public sealed record UserAccountSteamProfileLink
 {
 
     public string Link { get; private set; } = null!;
 
     private UserAccountSteamProfileLink()
     {
-        Link = "EMPTY";
+        Link = UserAccountGeneralProperties.StringPlaceholder;
     }
 
     public static UserAccountSteamProfileLink? Create(string? link)

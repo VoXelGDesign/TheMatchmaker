@@ -2,11 +2,9 @@
 
 namespace Domain.Users.UserAccounts;
 
-public record UserAccountName
+public sealed record UserAccountName
 {
     public string Name { get; private set; }
-
-
 
     public static UserAccountName? Create(string? name)
     {
@@ -22,12 +20,11 @@ public record UserAccountName
 
     private UserAccountName()
     {
-        Name = "EMPTY";
+        Name = UserAccountGeneralProperties.StringPlaceholder;
     }
 
     public static UserAccountName Default()
         => new UserAccountName();
-
 
     private static bool IsValidName(string? name)
     {
