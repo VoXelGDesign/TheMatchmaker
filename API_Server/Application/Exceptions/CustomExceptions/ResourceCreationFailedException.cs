@@ -2,9 +2,9 @@
 
 namespace Application.Exceptions.CustomExceptions
 {
-    internal sealed class ResourceCreationFailed : BaseApplicationException
+    internal sealed class ResourceCreationFailedException : BaseApplicationException
     {
-        internal ResourceCreationFailed() : 
+        internal ResourceCreationFailedException() : 
             base(ApplicationExceptionCodes.RESOURCE_CREATION_FAILED())
         {
         }
