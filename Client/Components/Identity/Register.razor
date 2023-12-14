@@ -7,7 +7,7 @@
 <PageTitle>Register</PageTitle>
 
 
-
+<MudGrid>
 <AuthorizeView>
     <Authorized>
 
@@ -15,7 +15,8 @@
     <NotAuthorized>
 
 
-        <MudCard Elevation="5" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%; min-width: 300px;">
+       <MudItem xs="12" Class="d-flex my-16 align-center justify-center flex-grow-1 gap-4">
+                <MudCard Elevation="10" Class="my-16 pa-10 rounded-xl" Style=" max-width: 500px; min-width: 300px">
             <MudCardHeader ><h1>Create new account.</h1></MudCardHeader>
             <MudForm Model="@model" @ref="@form" Validation="@(registerValidator.ValidateValue)" ValidationDelay="0">
                 <MudCardContent>
@@ -49,10 +50,11 @@
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">REGISTER</MudButton>
             </MudCardActions>
         </MudCard>
+        </MudItem>
 
     </NotAuthorized>
 </AuthorizeView>
-
+</MudGrid>
 
 @code {
     MudForm form;

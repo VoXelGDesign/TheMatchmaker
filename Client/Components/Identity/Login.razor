@@ -6,46 +6,50 @@
 
 <PageTitle>Login</PageTitle>
 
+<MudGrid>
 
-<AuthorizeView>
-    <Authorized>
+    <AuthorizeView>
 
-    </Authorized>
-    <NotAuthorized>
+        <Authorized>
 
-        
+        </Authorized>
 
-        <MudCard Elevation="10" Class="mx-auto pa-10 mt-10 rounded-xl" Style="width: 40%; min-width: 300px;">
-            <MudCardHeader><h2>Login to your account.</h2></MudCardHeader>
-            <MudForm Model="@model" @ref="@form" Validation="@(loginValidator.ValidateValue)" ValidationDelay="0">
-                <MudCardContent>
+        <NotAuthorized>
+
+            <MudItem xs="12" Class="d-flex my-16 align-center justify-center flex-grow-1 gap-4">
+                <MudCard Elevation="10" Class="my-16 pa-10 rounded-xl" Style=" max-width: 500px; min-width: 300px">
+                    <MudCardHeader><h2>Login to your account.</h2></MudCardHeader>
+                    <MudForm Model="@model" @ref="@form" Validation="@(loginValidator.ValidateValue)" ValidationDelay="0">
+                        <MudCardContent>
 
 
-                    <MudTextField @bind-Value="model.Email"
-                                  For="@(() => model.Email)"
-                                  Immediate="true"
-                                  Label="Email"
-                                  HelperText="ex. johndoe@gmail.com"
-                                  Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="model.Email"
+                                          For="@(() => model.Email)"
+                                          Immediate="true"
+                                          Label="Email"
+                                          HelperText="ex. johndoe@gmail.com"
+                                          Variant="Variant.Filled" />
 
-                    <MudTextField @bind-Value="model.Password"
-                                  For="@(() => model.Password)"
-                                  InputType="InputType.Password"
-                                  Immediate="true"
-                                  Label="Password"
-                                  HelperText="ex. Thematchmaker123!"
-                                  Variant="Variant.Filled" />
-                </MudCardContent>
+                            <MudTextField @bind-Value="model.Password"
+                                          For="@(() => model.Password)"
+                                          InputType="InputType.Password"
+                                          Immediate="true"
+                                          Label="Password"
+                                          HelperText="ex. Thematchmaker123!"
+                                          Variant="Variant.Filled" />
+                        </MudCardContent>
 
-            </MudForm>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">LOGIN</MudButton>
-            </MudCardActions>
-        </MudCard>
+                    </MudForm>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">LOGIN</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </NotAuthorized>
 
-    </NotAuthorized>
-</AuthorizeView>
+    </AuthorizeView>
 
+</MudGrid>
 
 @code {
     MudForm form;
