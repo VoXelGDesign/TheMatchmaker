@@ -1,21 +1,58 @@
-﻿
-<MudPaper Class="mt-15 mx-15 d-flex flex-grow-1 gap-4" Elevation="20">
-   
-    <MudCardHeader>
-        <a href="#">
-            <MudAvatar Rounded="true" Style="width: 100px; height: 100px;" Class="mr-10" Color="Color.Primary"><h1 class="mt-3"><b>M</b></h1></MudAvatar>
-        </a>
-    <AuthorizeView>
-        <NotAuthorized>
-                <MudText Class="ml-16"><h1>WELCOME TO THE MATCHMAKER</h1></MudText>
-        </NotAuthorized>
-        <Authorized>
-            <MudButton Size="Size.Large" Variant="Variant.Text" Color="Color.Primary" Style="width: 200px; height: 60px;" Href="private-page" Class="mx-4">Private Page</MudButton>
-        </Authorized>
-    </AuthorizeView>
-    </MudCardHeader>
+﻿<MudGrid>
+    <MudItem xs="12" Class="pa-8">
 
-    
-</MudPaper>
+        <MudCard Elevation="10" Class="mx-auto pa-5 mt-10 rounded-xl">
+            <MudGrid Class="d-flex align-center justify-space-around flex-grow-1">
+                    <MudItem>
+                        <a href="#">
+                            <MudAvatar Rounded="true" Style="width: 100px; height: 100px;"  Color="Color.Primary"><h1 class="mt-3"><b>M</b></h1></MudAvatar>
+                        </a>
+                    </MudItem>
+                    
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="false">
+                            <MudItem>
+                                <MudText ><h1>WELCOME TO THE MATCHMAKER</h1></MudText>
+                            </MudItem>
+                        </MudHidden>
+                        </NotAuthorized>
+                        <Authorized>
+                        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="false">
+
+
+                                <MudButton Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" Style="width: 200px; height: 60px;">QUEUE</MudButton>
+                                <MudButton Size="Size.Large" Variant="Variant.Text" Color="Color.Primary" Style="width: 200px; height: 60px;">ABOUT US</MudButton>
+                                <MudButton Size="Size.Large" Variant="Variant.Text" Color="Color.Primary" Style="width: 200px; height: 60px;" Href="my-account-page">MY ACCOUNT</MudButton>
+ 
+                        </MudHidden>
+                        
+                        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                            <MudItem >
+                                <MudMenu >
+                                    <ActivatorContent>
+                                        <MudButton EndIcon="@Icons.Material.Filled.Menu" Variant="Variant.Filled" Color="Color.Primary" Style="width: 120px; height: 70px;">MENU</MudButton>
+                                    </ActivatorContent>
+                                    <ChildContent>
+
+                                        <MudMenuItem IconSize="Size.Small" IconColor="Color.Primary" Icon="@Icons.Material.Filled.PeopleAlt">QUEUE</MudMenuItem>
+                                        <MudMenuItem IconSize="Size.Small" IconColor="Color.Primary" Icon="@Icons.Material.Filled.QuestionMark">ABOUT US</MudMenuItem>
+                                        <MudMenuItem Href="my-account-page" IconSize="Size.Small" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Person">ACCOUNT</MudMenuItem>
+
+                                    </ChildContent>
+
+                            </MudMenu>
+                            </MudItem>
+                        </MudHidden>
+                        
+                        </Authorized>
+                    </AuthorizeView>
+                
+                </MudGrid>
+            </MudCard>
+
+
+    </MudItem>
+</MudGrid>
 
 
