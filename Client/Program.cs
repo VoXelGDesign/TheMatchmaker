@@ -6,6 +6,7 @@ using Client.Identity;
 using Client;
 using Blazored.LocalStorage;
 using MudBlazor.Services;
+using Client.MyAccount;
 
 
 
@@ -24,6 +25,8 @@ builder.Services.AddAuthorizationCore();
 
 // register the custom state provider
 builder.Services.AddScoped<AuthenticationStateProvider, BearerAuthenticationStateProvider>();
+
+builder.Services.AddScoped<IMyAccount, MyAccountManager>();
 
 // register the account management interface
 builder.Services.AddScoped(

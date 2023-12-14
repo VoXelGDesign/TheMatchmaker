@@ -111,8 +111,8 @@ namespace Client.Identity
             if (loginResponse == null)
             {
                 //_notificationService.Notify(Notyfications.ErrorNotyfication("Invalid email and/or password."));
-                
-                return new FormResult { Succeeded = false, ErrorList = ["Invalid email and/or password."] };            
+
+                return new FormResult { Succeeded = false, ErrorList = ["Invalid email and/or password."] };
             }
 
             await _localStorage.SetItemAsStringAsync("TokenType", loginResponse.TokenType);
