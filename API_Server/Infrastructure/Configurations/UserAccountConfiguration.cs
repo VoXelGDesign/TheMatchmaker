@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Users.User;
 using Domain.Users.UserAccounts;
 
 namespace Infrastructure.Configurations;
@@ -17,7 +13,7 @@ internal class UserAccountConfiguration : IEntityTypeConfiguration<UserAccount>
 
         builder.Property(u => u.Id).HasConversion(
             id => id.Id,
-            id => new UserAccountId(id));
+            id => new UserId(id));
 
         builder.Property(u => u.Name).HasConversion(
             name => name.Name,
@@ -27,6 +23,9 @@ internal class UserAccountConfiguration : IEntityTypeConfiguration<UserAccount>
             link => link.Link,
             link => UserAccountSteamProfileLink.Create(link)!);
 
+        builder.Property(u => u.DiscordName).HasConversion(
+            name => name.Name,
+            name => UserDiscordName.Create(name)!);
 
     }
 }

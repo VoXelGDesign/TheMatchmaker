@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208205615_AddedDiscordName")]
+    partial class AddedDiscordName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,16 +45,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserAccounts");
-                });
-
-            modelBuilder.Entity("Domain.Users.UserGamesRanks.UserGameRank", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("UserGameRanks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -250,39 +243,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Users.UserGamesRanks.UserGameRank", b =>
-                {
-                    b.OwnsOne("Domain.Games.RocketLeague.Ranks.RocketLeagueRank", "RocketLeagueRank", b1 =>
-                        {
-                            b1.Property<Guid>("UserGameRankUserId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("RocketLeagueDivision")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("RocketLeagueDivision");
-
-                            b1.Property<string>("RocketLeagueRankName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("RocketLeagueRankName");
-
-                            b1.Property<string>("RocketLeagueRankNumber")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("RocketLeagueRankNumber");
-
-                            b1.HasKey("UserGameRankUserId");
-
-                            b1.ToTable("UserGameRanks");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserGameRankUserId");
-                        });
-
-                    b.Navigation("RocketLeagueRank");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
