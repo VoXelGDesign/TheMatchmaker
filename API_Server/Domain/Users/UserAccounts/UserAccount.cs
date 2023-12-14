@@ -1,14 +1,16 @@
-﻿namespace Domain.Users.UserAccounts;
+﻿using Domain.Users.User;
+
+namespace Domain.Users.UserAccounts;
 
 public sealed class UserAccount
 {
 
-    public UserAccountId Id { get; private set; } = null!;
+    public UserId Id { get; private set; } = null!;
     public UserAccountName Name { get; private set; } = null!;
     public UserAccountSteamProfileLink SteamProfileLink { get; private set; } = null!;
     public UserDiscordName DiscordName { get; private set; } = null!;
 
-    public static UserAccount? Create(UserAccountId id, UserAccountName name, UserAccountSteamProfileLink steamProfileLink, UserDiscordName userDiscordName)
+    public static UserAccount? Create(UserId id, UserAccountName name, UserAccountSteamProfileLink steamProfileLink, UserDiscordName userDiscordName)
         => new UserAccount
         {
             Id = id,
