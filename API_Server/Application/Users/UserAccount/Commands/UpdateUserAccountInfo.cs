@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions.CustomExceptions;
 using Domain.Users.UserAccounts;
+using Domain.Users.User;
 using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,11 +28,11 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (claimidentity == null) throw new IdClaimNotFound();
+        if (claimidentity == null) throw new IdClaimNotFoundException();
         
-        var userAccountId = new UserAccountId(Guid.Parse(claimidentity));
+        var userAccountId = new UserId(Guid.Parse(claimidentity));
 
-        var userAccountInfo = await _applicationDbContext.UserAccounts.FirstOrDefaultAsync(x => x.Id == userAccountId);
+        var userAccountInfo = await _applicationDbContext.UserAccounts.SingleOrDefaultAsync(x => x.Id == userAccountId);
 
         var name = UserAccountName.Create(request.dto.Name);
 
@@ -46,7 +47,7 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
                 name ?? UserAccountName.Default(),
                 link ?? UserAccountSteamProfileLink.Default(),
                 discordName ?? UserDiscordName.Default())
-                ?? throw new ResourceCreationFailed();
+                ?? throw new ResourceCreationFailedException();
 
             _applicationDbContext.UserAccounts.Add(userAccountInfo);
             await _applicationDbContext.SaveChangesAsync();

@@ -1,4 +1,5 @@
-﻿using Domain.Users.UserAccounts;
+﻿using Application.Exceptions.CustomExceptions;
+using Domain.Users.User;
 using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,12 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoComma
 
         if (claimidentity == null)
         {
-            throw new Exception("Identity does not exist");
+            throw new IdClaimNotFoundException();
         }
 
-        var userAccountId = new UserAccountId(Guid.Parse(claimidentity));
+        var userAccountId = new UserId(Guid.Parse(claimidentity));
 
-        var userAccountInfo = await _applicationDbContext.UserAccounts.FirstOrDefaultAsync(x => x.Id == userAccountId);
+        var userAccountInfo = await _applicationDbContext.UserAccounts.SingleOrDefaultAsync(x => x.Id == userAccountId);
 
         if (userAccountInfo is null)
         {
