@@ -1,0 +1,245 @@
+﻿@page "/my-account-page"
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IMyAccount MyAccount
+@using System.Security.Claims
+@using Client.MyAccount
+@using Client.MyAccount.Models
+
+<PageTitle>My Account</PageTitle>
+<MudGrid>
+    <MudItem xs="12" sm="12" lg="6" Class="pa-10">
+        <MudCard Elevation="10" Class="mx-auto pa-10 mt-10 rounded-xl">
+            <MudStack>
+                <MudText Class="my-5"><b><h2>Account</h2></b></MudText>
+            </MudStack>
+            <MudGrid>
+
+                @if (MyAccountResponse is not null)
+                {
+                    <MudItem xs="12" sm="3" Class="d-flex align-center justify-center flex-grow-1 gap-4">
+                        <MudAvatar Style="width: 100px; height: 100px;" Color="Color.Primary"><MudText Class="mt-2" Typo="Typo.h2" Color="Color.Dark"><b>@MyAccountResponse.Name[0].ToString()</b></MudText></MudAvatar>
+                    </MudItem>
+                    <MudItem xs="12" sm="9">
+                        <MudText Typo="Typo.h3"><b>@MyAccountResponse.Name</b></MudText>
+                        <MudText Typo="Typo.body2"><b>@MyAccountResponse.DiscordName</b></MudText>
+                        <MudText Color="Color.Primary" Typo="Typo.body2"><b>@MyAccountResponse.SteamProfileLink</b></MudText>
+                    </MudItem>
+
+                }
+                else
+                {
+                    <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4">
+                        <MudText Align="Align.Center">There is no infromation provided about account. Please insert information below.</MudText>
+                    </MudItem>
+
+                }
+
+            </MudGrid>
+            <MudDivider DividerType="DividerType.Middle" Class="my-10" />
+            <MudItem xs="12">
+                <MudText Color="Color.Primary">Update account: </MudText>
+                <MudForm Model="@MyAccountRequest" @ref="@form" Validation="@(loginValidator.ValidateValue)" ValidationDelay="0">
+                    <MudCardContent>
+                        <MudTextField @bind-Value="MyAccountRequest.Name"
+                                      For="@(() => MyAccountRequest.Name)"
+                                      Immediate="true"
+                                      Label="User name"
+                                      HelperText="Insert user name."
+                                      Variant="Variant.Filled" />
+
+                        <MudTextField @bind-Value="MyAccountRequest.DiscordName"
+                                      For="@(() => MyAccountRequest.DiscordName)"
+                                      Immediate="true"
+                                      Label="Discord name"
+                                      HelperText="Insert discord name."
+                                      Variant="Variant.Filled" />
+
+                        <MudTextField @bind-Value="MyAccountRequest.SteamProfileLink"
+                                      For="@(() => MyAccountRequest.SteamProfileLink)"
+                                      Immediate="true"
+                                      Label="Steam profile link"
+                                      HelperText="Insert link to steam profile"
+                                      Variant="Variant.Filled" />
+                    </MudCardContent>
+                </MudForm>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await UpdateMyAccount())">UPDATE</MudButton>
+                </MudCardActions>
+            </MudItem>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12" sm="12" lg="6" Class="pa-10">
+        <MudCard Elevation="10" Class="mx-auto pa-10 mt-10 rounded-xl">
+            <MudItem xs="12" Class="pb-8">
+                <MudText Color="Color.Dark" Typo="Typo.h2" Class="my-5"><b>ROCKET LEAGUE</b></MudText>
+            </MudItem>
+            <MudGrid>
+
+                @if (rocketLeagueRankResponse is not null)
+                {
+                    <MudItem xs="12" sm="6">
+                        <p>Rank:</p>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style=" width: 100%; height: 60px;">
+                            @switch (rocketLeagueRankResponse.Name)
+                            {
+                                case "BRONZE":
+                                    <MudText>Bronze </MudText>
+                                    break;
+                                case "SILVER":
+                                    <MudText>Silver </MudText>
+                                    break;
+                                case "GOLD":
+                                    <MudText>Gold </MudText>
+                                    break;
+                                case "DIAMOND":
+                                    <MudText>Diamond </MudText>
+                                    break;
+                                case "CHAMPION":
+                                    <MudText>Champion </MudText>
+                                    break;
+                                case "GRANDCHAMPION":
+                                    <MudText>Grand Champion </MudText>
+                                    break;
+                                case "SUPERSONICLEGEND":
+                                    <MudText>Supersonic Legend </MudText>
+                                    break;
+                                default:                                 
+                                    break;
+                            }
+                            &nbsp; 
+                           @rocketLeagueRankResponse.Number.Replace("NONE", "")
+                            
+                        </MudButton>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <p>Division:</p>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style=" width: 100%; height: 60px;">
+                            @rocketLeagueRankResponse.Division.Replace("NONE", "")
+                        </MudButton>
+                    </MudItem>
+
+                }
+                else
+                {
+                    <MudItem xs="12">
+                        <MudText Align="Align.Center">There is no infromation provided about account. Please insert information below.</MudText>
+                    </MudItem>
+
+                }
+
+            </MudGrid>
+            <MudDivider DividerType="DividerType.Middle" Class="my-10" />
+            <MudItem xs="12">
+                <MudText Color="Color.Secondary">Update rank: </MudText>
+                <MudSelect @bind-Value="rocketLeagueRankRequest.Name" Label="Select Your Rank" HelperText="ex. Silver" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                    <MudSelectItem Value="@("BRONZE")">Bronze</MudSelectItem>
+                    <MudSelectItem Value="@("SILVER")">Silver</MudSelectItem>
+                    <MudSelectItem Value="@("GOLD")">Gold</MudSelectItem>
+                    <MudSelectItem Value="@("DIAMOND")">Diamond</MudSelectItem>
+                    <MudSelectItem Value="@("CHAMPION")">Champion</MudSelectItem>
+                    <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
+                    <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
+                </MudSelect>
+
+                <MudSelect @bind-Value="rocketLeagueRankRequest.Number" Label="Select Your Rank Number" HelperText="ex. I" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                    <MudSelectItem Value="@("NONE")">...</MudSelectItem>
+                    <MudSelectItem Value="@("I")">I</MudSelectItem>
+                    <MudSelectItem Value="@("II")">II</MudSelectItem>
+                    <MudSelectItem Value="@("III")">III</MudSelectItem>
+                </MudSelect>
+                <MudSelect @bind-Value="rocketLeagueRankRequest.Division" Label="Select Your Division" HelperText="ex. IV" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                    <MudSelectItem Value="@("NONE")">-...</MudSelectItem>
+                    <MudSelectItem Value="@("I")">I</MudSelectItem>
+                    <MudSelectItem Value="@("II")">II</MudSelectItem>
+                    <MudSelectItem Value="@("III")">III</MudSelectItem>
+                    <MudSelectItem Value="@("IV")">IV</MudSelectItem>
+                </MudSelect>
+
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" OnClick="@(async () => await UpdateRocketLeagueRank())">UPDATE</MudButton>
+                </MudCardActions>
+            </MudItem>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+
+    MudForm form;
+    UserAccountModelFluentValidator loginValidator = new();
+    UserAccountInfo? MyAccountResponse;
+    RocketLeagueRank rocketLeagueRankRequest = new();    
+    RocketLeagueRank? rocketLeagueRankResponse;
+    UserAccountInfo MyAccountRequest = new();
+    bool disableRankUpdate = true;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+
+
+    public class UserAccountModelFluentValidator : AbstractValidator<UserAccountInfo>
+    {
+        public UserAccountModelFluentValidator()
+        {
+            RuleFor(x => x.DiscordName)
+                .Matches(@"^[a-zA-Z0-9]{2,32}$")
+                .WithMessage("Please enter correct email address");
+
+            RuleFor(x => x.Name)
+            .Matches(@"^[a-zA-Z0-9_.+-]{4,25}$")
+            .WithMessage("Please enter correct email address");
+
+            RuleFor(x => x.SteamProfileLink)
+                .Matches(@"^https:\/\/steamcommunity\.com\/id\/[a-zA-Z0-9]+\/?$")
+                .WithMessage("Please enter correct steam user profile link");
+
+        }
+
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<UserAccountInfo>.CreateWithOptions((UserAccountInfo)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+
+    }
+
+    private async Task UpdateMyAccount()
+    {
+        MyAccountResponse = await MyAccount.UpdateUserAccountInfo(MyAccountRequest);
+        MyAccountRequest = new();
+    }
+
+    private async Task UpdateRocketLeagueRank()
+    {
+     
+        var response = await MyAccount.UpdateRocketLeagueRank(rocketLeagueRankRequest);
+
+        if (response is not null){
+            rocketLeagueRankResponse = response;
+        }
+        
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+
+        MyAccountResponse = await MyAccount.GetUserAccountInfo();
+        rocketLeagueRankResponse = await MyAccount.GetRocketLeagueRank();
+
+        if (!authState.User.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+
+    }
+}
