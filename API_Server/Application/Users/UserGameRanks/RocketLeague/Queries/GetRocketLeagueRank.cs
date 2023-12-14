@@ -1,5 +1,4 @@
 ﻿using Application.Exceptions.CustomExceptions;
-using Domain.Games.RocketLeague.Ranks;
 using Domain.Users.User;
 using Infrastructure;
 using MediatR;
@@ -8,7 +7,7 @@ using System.Security.Claims;
 
 namespace Application.Users.UserGameRanks.RocketLeague.Queries;
 
-public record RocketLeagueRankDto(RocketLeagueRankName Name, RocketLeagueRankNumber Number, RocketLeagueDivision Division);
+public record RocketLeagueRankDto(string Name, string Number, string Division);
 
 public record GetUserRocketLeagueRankCommand() : IRequest<RocketLeagueRankDto>;
 
@@ -46,9 +45,9 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRank
         }
 
         return new RocketLeagueRankDto(
-            userGameRank.RocketLeagueRank.RocketLeagueRankName,
-            userGameRank.RocketLeagueRank.RocketLeagueRankNumber,
-            userGameRank.RocketLeagueRank.RocketLeagueDivision);
+            userGameRank.RocketLeagueRank.RocketLeagueRankName.ToString(),
+            userGameRank.RocketLeagueRank.RocketLeagueRankNumber.ToString(),
+            userGameRank.RocketLeagueRank.RocketLeagueDivision.ToString());
 
     }
 }

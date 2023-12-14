@@ -53,11 +53,11 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
             await _applicationDbContext.SaveChangesAsync();
         }
 
-        userAccountInfo.UpdateUserAccount(name, link);
+        userAccountInfo.UpdateUserAccount(name, link, discordName);
 
         await _applicationDbContext.SaveChangesAsync();
 
-        return new UpdateUserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link);
+        return new UpdateUserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
     }
 }
 

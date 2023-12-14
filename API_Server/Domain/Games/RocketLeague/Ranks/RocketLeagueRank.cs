@@ -1,4 +1,6 @@
-﻿namespace Domain.Games.RocketLeague.Ranks;
+﻿using Domain.Exceptions.CustomExceptions;
+
+namespace Domain.Games.RocketLeague.Ranks;
 
 public sealed record RocketLeagueRank
 {
@@ -9,19 +11,36 @@ public sealed record RocketLeagueRank
     public RocketLeagueDivision RocketLeagueDivision { get; private set; }
 
 
-    public static RocketLeagueRank? Create(
-        RocketLeagueRankName name,
-        RocketLeagueRankNumber rankNumber,
-        RocketLeagueDivision division)
+    public static RocketLeagueRank? Create(string name, string number, string division)
     {
+        RocketLeagueRankName? parsedName = null;
+        RocketLeagueRankNumber? parsedNumber = null;
+        RocketLeagueDivision? parsedDivision = null;
 
-        if (IsInvalidCombination(name, rankNumber, division)) return null;
+        try
+        {
+            parsedName = (RocketLeagueRankName)Enum.Parse(typeof(RocketLeagueRankName), name);
+            parsedNumber = (RocketLeagueRankNumber)Enum.Parse(typeof(RocketLeagueRankNumber), number);
+            parsedDivision = (RocketLeagueDivision)Enum.Parse(typeof(RocketLeagueDivision), division);
+        }
+        catch
+        {
+            return null;
+        }
+
+        if (parsedName is null || parsedNumber is null || parsedDivision is null) return null;
+
+        var rlName = parsedName.Value;
+        var rlNumber = parsedNumber.Value;
+        var rlDivision = parsedDivision.Value;
+
+        if (IsInvalidCombination(rlName, rlNumber, rlDivision)) return null;
 
         return new RocketLeagueRank
         {
-            RocketLeagueRankName = name,
-            RocketLeagueRankNumber = rankNumber,
-            RocketLeagueDivision = division
+            RocketLeagueRankName = rlName,
+            RocketLeagueRankNumber = rlNumber,
+            RocketLeagueDivision = rlDivision
         };
     }
 
@@ -29,7 +48,10 @@ public sealed record RocketLeagueRank
         RocketLeagueRankName name,
         RocketLeagueRankNumber rankNumber,
         RocketLeagueDivision division)
-        => name == RocketLeagueRankName.SUPERSONICLEGEND &&
-            (rankNumber != RocketLeagueRankNumber.NONE || division != RocketLeagueDivision.NONE);
+        => (name == RocketLeagueRankName.SUPERSONICLEGEND &&
+            (rankNumber != RocketLeagueRankNumber.NONE || division != RocketLeagueDivision.NONE)) ||
+            (name != RocketLeagueRankName.SUPERSONICLEGEND &&
+            (rankNumber == RocketLeagueRankNumber.NONE || division == RocketLeagueDivision.NONE));
+
 
 }

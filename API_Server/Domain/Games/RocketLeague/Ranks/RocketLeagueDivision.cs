@@ -7,5 +7,5 @@ public enum RocketLeagueDivision
     I,
     II,
     III,
-    VI
+    IV
 }

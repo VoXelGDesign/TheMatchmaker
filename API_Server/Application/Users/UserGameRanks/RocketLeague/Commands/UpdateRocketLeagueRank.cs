@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace Application.Users.UserGameRanks.RocketLeague.Commands;
 
-public record RocketLeagueUpdateRankDto(RocketLeagueRankName Name, RocketLeagueRankNumber Number, RocketLeagueDivision Division);
+public record RocketLeagueUpdateRankDto(string Name, string Number, string Division);
 
 public record UpdateRocketLeagueRankCommand(RocketLeagueUpdateRankDto dto) : IRequest<RocketLeagueUpdateRankDto>;
 
@@ -62,8 +62,8 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
         await _applicationDbContext.SaveChangesAsync();
 
         return new RocketLeagueUpdateRankDto(
-            userGameRank.RocketLeagueRank.RocketLeagueRankName,
-            userGameRank.RocketLeagueRank.RocketLeagueRankNumber,
-            userGameRank.RocketLeagueRank.RocketLeagueDivision);
+            userGameRank.RocketLeagueRank.RocketLeagueRankName.ToString(),
+            userGameRank.RocketLeagueRank.RocketLeagueRankNumber.ToString(),
+            userGameRank.RocketLeagueRank.RocketLeagueDivision.ToString());
     }
 }

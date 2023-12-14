@@ -7,8 +7,7 @@ using System.Security.Claims;
 
 namespace Application.Users.UserAccount.Commands;
 
-public record UserAccountInfoDto(string? Name, string? SteamProfileLink);
-
+public record UserAccountInfoDto(string? Name = null, string? SteamProfileLink = null, string? DiscordName = null);
 public record GetUserAccountInfoCommand() : IRequest<UserAccountInfoDto>;
 
 
@@ -39,6 +38,6 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoComma
             return new UserAccountInfoDto(null, null);
         }
 
-        return new UserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link);
+        return new UserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
     }
 }
