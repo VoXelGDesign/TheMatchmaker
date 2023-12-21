@@ -1,5 +1,9 @@
+using Application.Interfaces;
 using Application.Middleware;
+using Azure.Messaging;
 using Infrastructure;
+using Infrastructure.Publishers;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -71,6 +75,18 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 // End Swagger
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+    x.UsingAzureServiceBus((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["AzureServiceBusConnectionString"]);
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddScoped<IQueueRequestPublisher, QueueRequestPublisher>();
 
 var app = builder.Build();
 

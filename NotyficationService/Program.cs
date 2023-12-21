@@ -1,5 +1,9 @@
 
+using Infrastructure.Publishers.Contracts;
+using MassTransit;
 using NotyficationService;
+using NotyficationService.Consumers;
+using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +24,27 @@ builder.Services.AddCors(options =>
                 .AllowAnyOrigin();
         });
 });
+
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.AddConsumers(Assembly.GetExecutingAssembly());
+
+    x.UsingAzureServiceBus((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["AzureServiceBusConnectionString"]);
+
+        cfg.SubscriptionEndpoint<QueueRequest>("queue-request-consumer", e =>
+        {
+            e.ConfigureConsumer<QueueRequestConsumer>(context);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
