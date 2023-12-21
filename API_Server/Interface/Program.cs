@@ -50,7 +50,7 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(options => 
     options.RegisterServicesFromAssemblies(
         Assembly.GetExecutingAssembly(),
-        Assembly.GetAssembly(typeof(Application.Users.UserAccount.Commands.GetUserAccountInfoCommand))!
+        Assembly.GetAssembly(typeof(Application.Users.UserAccount.Queries.GetUserAccountInfoQuery))!
         ));
 
 builder.Services.AddScoped(s => s.GetService<IHttpContextAccessor>()!.HttpContext!.User!);
