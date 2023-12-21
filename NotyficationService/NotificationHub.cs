@@ -8,8 +8,9 @@ namespace NotyficationService
     {
         internal Dictionary<UserIdDto, ConnectionId> RegisteredClients { get; private set;} = new Dictionary<UserIdDto, ConnectionId>();
 
-        public void RegisterClient(UserIdDto userId)
+        public void RegisterClient(string idValue)
         {
+            var userId = new UserIdDto(idValue);
             var connectionId = new ConnectionId(Context.ConnectionId);
             RegisteredClients.Add(userId, connectionId);
         }

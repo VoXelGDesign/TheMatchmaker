@@ -1,15 +1,13 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+
 using NotyficationService;
-using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<NotificationHub, NotificationHub>();
 
 builder.Services.AddCors(options =>
 {
@@ -33,19 +31,19 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapHub<NotificationHub>("notyfications");
 
-app.MapPost("/notifyClient", async (string userGuid, IHubContext<NotificationHub, INotificationClient> _context, ClaimsPrincipal _user) =>
+app.MapPost("/notifyClient", (string userGuid, NotificationHub hub) =>
 {
-    
-    await _context.Clients.All.RecieveNotification();
-    _user.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userId = new UserIdDto(userGuid);
+    hub.NotifyUser(userId);
     return;
 })
 .WithName("NotifyClient")
 .WithOpenApi();
 
 app.UseCors("AllowMyOrigin");
-app.MapHub<NotificationHub>("notyfications");
+
 
 
 app.Run();

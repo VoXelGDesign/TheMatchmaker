@@ -35,7 +35,7 @@ namespace Client.Notifications
         {
             if (!IsConnected(_hubConnection.State)) return;
 
-            await _hubConnection.InvokeAsync("RegisterClient", userId);
+            await _hubConnection.InvokeAsync("RegisterClient", userId.UserId);
 
         }
 
