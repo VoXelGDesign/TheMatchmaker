@@ -4,6 +4,10 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using Client.Identity.Models;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.SignalR.Client;
+using MudBlazor;
+using Client.MyAccount.Models;
+using Client.Notifications;
 
 
 
@@ -22,20 +26,25 @@ namespace Client.Identity
 
         private readonly ILocalStorageService _localStorage;
 
+        private readonly INotificationManager _notificationManager;
+
         private bool _authenticated = false;
 
         private readonly ClaimsPrincipal Unauthenticated =
             new(new ClaimsIdentity());
 
-        //private readonly NotificationService _notificationService;
+
+        private readonly ISnackbar _snackbar;
+        
 
 
-        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage /*NotificationService notificationService*/)
+        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, ISnackbar snackbar, INotificationManager notificationManager)
         {
             _httpClient = httpClientFactory.CreateClient("Auth");
             _localStorage = localStorage;
-            //_notificationService = notificationService;
-        }
+            _snackbar = snackbar;
+            _notificationManager = notificationManager;
+    }
 
         public async Task<FormResult> RegisterAsync(string email, string password)
         {
@@ -120,7 +129,19 @@ namespace Client.Identity
             await _localStorage.SetItemAsStringAsync("ExpiresIn", loginResponse.ExpiresIn.ToString());
             await _localStorage.SetItemAsStringAsync("RefreshToken", loginResponse.RefreshToken);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-            //_notificationService.Notify(Notyfications.SuccessNotyfication("Loged in successfully!"));
+
+
+            var responseId = await _httpClient.GetAsync("/Identifier");
+            
+            var userId = await responseId.Content.ReadFromJsonAsync<UserIdDto>();
+
+            await _notificationManager.ConnectToNotificationService();
+
+            if (userId is not null)
+            {
+                await _notificationManager.SubscribeToNotificationService(userId);
+            }          
+
             return new FormResult { Succeeded = true };
 
         }

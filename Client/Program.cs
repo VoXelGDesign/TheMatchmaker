@@ -7,6 +7,7 @@ using Client;
 using Blazored.LocalStorage;
 using MudBlazor.Services;
 using Client.MyAccount;
+using Client.Notifications;
 
 
 
@@ -16,6 +17,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Services.AddScoped<INotificationManager, NotificationManager>();
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<BearerHandler>();

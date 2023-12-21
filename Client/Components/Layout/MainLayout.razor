@@ -1,46 +1,53 @@
-﻿@using Client.Identity
+﻿@using Blazored.LocalStorage
+@using Client.Identity
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Net.Http.Headers
 @inherits LayoutComponentBase
 @inject IAccountManagement Acct
+@inject ISnackbar Snackbar
+@inject ILocalStorageService Storage;
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Color=Color.Primary Elevation="10" Class="mb-4">
-        
+
         <MudSpacer />
         <AuthorizeView>
 
-            <Authorized>              
+            <Authorized>
                 <MudCard Class="ma-2" Elevation="4">
                     <MudText Class="ma-2" Color="Color.Primary"><b>@context.User.Identity?.Name.ToUpper()</b></MudText>
                 </MudCard>
                 <MudButton Size="Size.Large" OnClick="Logout">LOGOUT</MudButton>
-              
+
             </Authorized>
 
             <NotAuthorized>
                 <MudButton Size="Size.Large" Href="register">REGISTER</MudButton>
-                <MudButton Size="Size.Large" Href="login">LOGIN</MudButton>               
+                <MudButton Size="Size.Large" Href="login">LOGIN</MudButton>
             </NotAuthorized>
 
-        </AuthorizeView>   
-    </MudAppBar>  
-    
-    <MudMainContent> 
+        </AuthorizeView>
+    </MudAppBar>
+
+    <MudMainContent>
         <MudContainer Style="max-width: 1500px">
-        <NavMenu></NavMenu>
-        @Body
+            <NavMenu></NavMenu>
+            @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
 
 @code {
+    
 
     private bool _isDarkMode = true;
     private MudTheme _theme = new();
 
+   
 
     private async Task Logout()
     {
