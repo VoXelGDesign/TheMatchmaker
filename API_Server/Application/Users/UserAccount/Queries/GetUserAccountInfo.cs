@@ -5,13 +5,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Application.Users.UserAccount.Commands;
+namespace Application.Users.UserAccount.Queries;
 
 public record UserAccountInfoDto(string? Name = null, string? SteamProfileLink = null, string? DiscordName = null);
-public record GetUserAccountInfoCommand() : IRequest<UserAccountInfoDto>;
+public record GetUserAccountInfoQuery() : IRequest<UserAccountInfoDto>;
 
 
-public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoCommand, UserAccountInfoDto>
+public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery, UserAccountInfoDto>
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
@@ -20,7 +20,7 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoComma
         _applicationDbContext = applicationDbContext;
         _user = user;
     }
-    public async Task<UserAccountInfoDto> Handle(GetUserAccountInfoCommand request, CancellationToken cancellationToken)
+    public async Task<UserAccountInfoDto> Handle(GetUserAccountInfoQuery request, CancellationToken cancellationToken)
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
