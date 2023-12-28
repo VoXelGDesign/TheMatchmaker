@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace NotyficationService
 {
-    
+
     public class NotificationHub : Hub<INotificationClient>
     {
-        internal Dictionary<UserIdDto, ConnectionId> RegisteredClients { get; private set;} = new Dictionary<UserIdDto, ConnectionId>();
+        internal Dictionary<UserIdDto, ConnectionId> RegisteredClients { get; private set; } = new Dictionary<UserIdDto, ConnectionId>();
 
         public void RegisterClient(string idValue)
         {
@@ -26,10 +26,10 @@ namespace NotyficationService
         {
             var connectionId = new ConnectionId(Context.ConnectionId);
 
-            foreach(var conn in RegisteredClients)
-                if(conn.Value == connectionId)
+            foreach (var conn in RegisteredClients)
+                if (conn.Value == connectionId)
                     RegisteredClients.Remove(conn.Key);
-            
+
             return base.OnDisconnectedAsync(exception);
         }
     }

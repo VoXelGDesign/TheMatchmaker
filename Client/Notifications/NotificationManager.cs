@@ -6,7 +6,7 @@ namespace Client.Notifications
     public class NotificationManager : INotificationManager
     {
 
-        private const string _connectionString = "https://localhost:7276/notyfications";
+        private const string _connectionString = "https://localhost:7005/notyfications";
         
         private HubConnection _hubConnection;
 

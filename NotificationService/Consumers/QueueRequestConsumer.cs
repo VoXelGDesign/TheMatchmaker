@@ -1,4 +1,4 @@
-﻿using Infrastructure.Publishers.Contracts;
+﻿using Contracts.QueueContracts;
 using MassTransit;
 
 namespace NotyficationService.Consumers
