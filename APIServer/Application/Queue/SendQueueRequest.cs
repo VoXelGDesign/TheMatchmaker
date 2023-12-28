@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using MediatR;
-using Infrastructure.Publishers.Contracts;
+using Contracts.QueueContracts;
 using System.Security.Claims;
 using Application.Exceptions.CustomExceptions;
 

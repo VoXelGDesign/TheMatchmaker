@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "Interface\Interface.csproj", "{EE6F4804-F5A3-44D2-BFCC-30DCC75FBB48}"
 	ProjectSection(ProjectDependencies) = postProject
 		{09F48EFE-7564-48E9-8604-039F91CEFD48} = {09F48EFE-7564-48E9-8604-039F91CEFD48}
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C} = {EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}"
@@ -19,7 +20,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 	ProjectSection(ProjectDependencies) = postProject
 		{019AE2A0-B24B-44C8-9852-C83877B6C336} = {019AE2A0-B24B-44C8-9852-C83877B6C336}
 		{ABD4C6EA-C886-4F09-BE31-3D1A339F5F11} = {ABD4C6EA-C886-4F09-BE31-3D1A339F5F11}
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C} = {EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\Contracts\Contracts.csproj", "{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,10 @@ Global
 		{09F48EFE-7564-48E9-8604-039F91CEFD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F48EFE-7564-48E9-8604-039F91CEFD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F48EFE-7564-48E9-8604-039F91CEFD48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB78F3C-2DB0-49D7-9380-0BCC393A2A5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

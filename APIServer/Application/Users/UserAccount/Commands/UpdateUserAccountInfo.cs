@@ -5,14 +5,16 @@ using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Contracts.ApiContracts.UserAccountInfo.Requests;
+using Contracts.ApiContracts.UserAccountInfo.Responses;
 
 namespace Application.Users.UserAccount.Commands;
 
-public record UpdateUserAccountInfoDto(string? Name = null, string? SteamProfileLink = null, string? DiscordName = null);
 
-public record UpdateUserAccountInfoCommand(UpdateUserAccountInfoDto dto) : IRequest<UpdateUserAccountInfoDto>;
 
-public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInfoCommand, UpdateUserAccountInfoDto>
+public record UpdateUserAccountInfoCommand(UpdateUserAccountInfoRequest dto) : IRequest<UpdateUserAccountInfoResponse>;
+
+public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInfoCommand, UpdateUserAccountInfoResponse>
 {
 
     private readonly ApplicationDbContext _applicationDbContext;
@@ -24,7 +26,7 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
         _user = user;
     }
 
-    public async Task<UpdateUserAccountInfoDto> Handle(UpdateUserAccountInfoCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateUserAccountInfoResponse> Handle(UpdateUserAccountInfoCommand request, CancellationToken cancellationToken)
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -57,7 +59,7 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
 
         await _applicationDbContext.SaveChangesAsync();
 
-        return new UpdateUserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
+        return new UpdateUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
     }
 }
 

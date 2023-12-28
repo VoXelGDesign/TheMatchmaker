@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Application.Interfaces;
-using Infrastructure.Publishers.Contracts;
+using Contracts.QueueContracts;
 
 namespace Infrastructure.Publishers;
 public class QueueRequestPublisher : IQueueRequestPublisher

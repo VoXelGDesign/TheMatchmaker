@@ -1,10 +1,9 @@
 ﻿using Application.Exceptions.CustomExceptions;
 using MediatR;
 using System.Security.Claims;
-
+using Contracts.Common;
 namespace Application.Users.UserAccount.Queries;
 
-public record UserIdDto(string UserId);
 
 public record GetUserIdentifierQuery() : IRequest<UserIdDto>;
 

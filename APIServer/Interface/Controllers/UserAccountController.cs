@@ -1,5 +1,8 @@
 ﻿using Application.Users.UserAccount.Commands;
 using Application.Users.UserAccount.Queries;
+using Contracts.ApiContracts.UserAccountInfo.Requests;
+using Contracts.ApiContracts.UserAccountInfo.Responses;
+using Contracts.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +21,7 @@ public class UserAccountController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<UserAccountInfoDto>> GetUserAccountInfo()
+    public async Task<ActionResult<GetUserAccountInfoResponse>> GetUserAccountInfo()
         => await _mediator.Send(new GetUserAccountInfoQuery());
 
     [HttpGet("/Identifier")]
@@ -26,7 +29,7 @@ public class UserAccountController : ControllerBase
         => await _mediator.Send(new GetUserIdentifierQuery());
 
     [HttpPut]
-    public async Task<ActionResult<UpdateUserAccountInfoDto>> UpdateUserAccountInfo(UpdateUserAccountInfoDto dto)
+    public async Task<ActionResult<UpdateUserAccountInfoResponse>> UpdateUserAccountInfo(UpdateUserAccountInfoRequest dto)
         => await _mediator.Send(new UpdateUserAccountInfoCommand(dto));
 
 

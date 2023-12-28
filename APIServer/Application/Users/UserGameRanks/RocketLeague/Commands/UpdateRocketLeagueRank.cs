@@ -1,4 +1,6 @@
 ﻿using Application.Exceptions.CustomExceptions;
+using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Requests;
+using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Responses;
 using Domain.Games.RocketLeague.Ranks;
 using Domain.Users.User;
 using Domain.Users.UserGamesRanks;
@@ -10,11 +12,11 @@ using System.Security.Claims;
 
 namespace Application.Users.UserGameRanks.RocketLeague.Commands;
 
-public record RocketLeagueUpdateRankDto(string Name, string Number, string Division);
 
-public record UpdateRocketLeagueRankCommand(RocketLeagueUpdateRankDto dto) : IRequest<RocketLeagueUpdateRankDto>;
 
-public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRankCommand, RocketLeagueUpdateRankDto>
+public record UpdateRocketLeagueRankCommand(UpdateRocketLeagueRankRequest dto) : IRequest<UpdateRocketLeagueRankResponse>;
+
+public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRankCommand, UpdateRocketLeagueRankResponse>
 {
 
     private readonly ApplicationDbContext _applicationDbContext;
@@ -26,7 +28,7 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
         _user = user;
     }
 
-    public async Task<RocketLeagueUpdateRankDto> Handle(UpdateRocketLeagueRankCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateRocketLeagueRankResponse> Handle(UpdateRocketLeagueRankCommand request, CancellationToken cancellationToken)
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -61,7 +63,7 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
 
         await _applicationDbContext.SaveChangesAsync();
 
-        return new RocketLeagueUpdateRankDto(
+        return new UpdateRocketLeagueRankResponse(
             userGameRank.RocketLeagueRank.RocketLeagueRankName.ToString(),
             userGameRank.RocketLeagueRank.RocketLeagueRankNumber.ToString(),
             userGameRank.RocketLeagueRank.RocketLeagueDivision.ToString());

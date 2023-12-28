@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions.CustomExceptions;
+using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Responses;
 using Domain.Users.User;
 using Infrastructure;
 using MediatR;
@@ -7,12 +8,11 @@ using System.Security.Claims;
 
 namespace Application.Users.UserGameRanks.RocketLeague.Queries;
 
-public record RocketLeagueRankDto(string Name, string Number, string Division);
 
-public record GetUserRocketLeagueRankCommand() : IRequest<RocketLeagueRankDto>;
+public record GetUserRocketLeagueRankCommand() : IRequest<GetRocketLeagueRankResponse>;
 
 
-public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRankCommand, RocketLeagueRankDto?>
+public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRankCommand, GetRocketLeagueRankResponse?>
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
@@ -21,7 +21,7 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRank
         _applicationDbContext = applicationDbContext;
         _user = user;
     }
-    public async Task<RocketLeagueRankDto?> Handle(GetUserRocketLeagueRankCommand request, CancellationToken cancellationToken)
+    public async Task<GetRocketLeagueRankResponse?> Handle(GetUserRocketLeagueRankCommand request, CancellationToken cancellationToken)
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -44,7 +44,7 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRank
             return null;
         }
 
-        return new RocketLeagueRankDto(
+        return new GetRocketLeagueRankResponse(
             userGameRank.RocketLeagueRank.RocketLeagueRankName.ToString(),
             userGameRank.RocketLeagueRank.RocketLeagueRankNumber.ToString(),
             userGameRank.RocketLeagueRank.RocketLeagueDivision.ToString());

@@ -4,14 +4,15 @@ using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Contracts.ApiContracts.UserAccountInfo.Responses;
 
 namespace Application.Users.UserAccount.Queries;
 
-public record UserAccountInfoDto(string? Name = null, string? SteamProfileLink = null, string? DiscordName = null);
-public record GetUserAccountInfoQuery() : IRequest<UserAccountInfoDto>;
+
+public record GetUserAccountInfoQuery() : IRequest<GetUserAccountInfoResponse>;
 
 
-public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery, UserAccountInfoDto>
+public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery, GetUserAccountInfoResponse>
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
@@ -20,7 +21,7 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery
         _applicationDbContext = applicationDbContext;
         _user = user;
     }
-    public async Task<UserAccountInfoDto> Handle(GetUserAccountInfoQuery request, CancellationToken cancellationToken)
+    public async Task<GetUserAccountInfoResponse> Handle(GetUserAccountInfoQuery request, CancellationToken cancellationToken)
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -35,9 +36,9 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery
 
         if (userAccountInfo is null)
         {
-            return new UserAccountInfoDto(null, null);
+            return new GetUserAccountInfoResponse(null, null);
         }
 
-        return new UserAccountInfoDto(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
+        return new GetUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
     }
 }
