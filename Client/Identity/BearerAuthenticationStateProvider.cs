@@ -4,10 +4,9 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using Client.Identity.Models;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
-using Client.MyAccount.Models;
 using Client.Notifications;
+using Contracts.Common;
 
 
 

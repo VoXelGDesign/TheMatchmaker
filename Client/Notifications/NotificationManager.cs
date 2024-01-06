@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Contracts.Common;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 
 namespace Client.Notifications
@@ -49,5 +50,4 @@ namespace Client.Notifications
         }
     }
 
-    public record UserIdDto(string UserId);
 }

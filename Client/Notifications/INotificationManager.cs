@@ -1,4 +1,6 @@
-﻿namespace Client.Notifications
+﻿using Contracts.Common;
+
+namespace Client.Notifications
 {
     public interface INotificationManager
     {
