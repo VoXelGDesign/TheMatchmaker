@@ -19,11 +19,19 @@ public sealed record RocketLeagueRank
 
         try
         {
-            parsedName = (RocketLeagueRankName)Enum.Parse(typeof(RocketLeagueRankName), name);
-            parsedNumber = (RocketLeagueRankNumber)Enum.Parse(typeof(RocketLeagueRankNumber), number);
-            parsedDivision = (RocketLeagueDivision)Enum.Parse(typeof(RocketLeagueDivision), division);
+            parsedName = (RocketLeagueRankName)Enum.Parse(
+                typeof(RocketLeagueRankName),
+                name);
+
+            parsedNumber = (RocketLeagueRankNumber)Enum.Parse(
+                typeof(RocketLeagueRankNumber),
+                number);
+
+            parsedDivision = (RocketLeagueDivision)Enum.Parse(
+                typeof(RocketLeagueDivision),
+                division);
         }
-        catch
+        catch 
         {
             return null;
         }
