@@ -12,8 +12,7 @@ internal class GetUserIdentifier : IRequestHandler<GetUserIdentifierQuery, UserI
     private readonly ClaimsPrincipal _user;
     public GetUserIdentifier(ClaimsPrincipal user)
     {
-         _user = user;
-
+        _user = user;
     }
 
     public async Task<UserIdDto> Handle(GetUserIdentifierQuery request, CancellationToken cancellationToken)
