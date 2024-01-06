@@ -1,5 +1,6 @@
 
 using Contracts.QueueContracts;
+using Contracts.QueueContracts.RocketLeague;
 using MassTransit;
 using NotyficationService;
 using NotyficationService.Consumers;
@@ -36,7 +37,7 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host(builder.Configuration["AzureServiceBusConnectionString"]);
 
-        cfg.SubscriptionEndpoint<QueueRequest>("queue-request-consumer", e =>
+        cfg.SubscriptionEndpoint<QueueRocketLeagueLobby>("queue-request-consumer", e =>
         {
             e.ConfigureConsumer<QueueRequestConsumer>(context);
         });
