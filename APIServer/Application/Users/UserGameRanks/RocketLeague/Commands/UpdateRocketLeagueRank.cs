@@ -32,13 +32,20 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
     {
         var claimidentity = _user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (claimidentity == null) throw new IdClaimNotFoundException();
+        if (claimidentity == null) 
+            throw new IdClaimNotFoundException();
 
         var userId = new UserId(Guid.Parse(claimidentity));
 
-        var userGameRank = await _applicationDbContext.UserGameRanks.SingleOrDefaultAsync(x => x.UserId == userId);
+        var userGameRank =
+            await _applicationDbContext.UserGameRanks
+            .SingleOrDefaultAsync(x => x.UserId == userId);
 
-        var rocketLeagueRank = RocketLeagueRank.Create(request.dto.Name, request.dto.Number, request.dto.Division);
+        var rocketLeagueRank = RocketLeagueRank.Create(
+                request.dto.Name,
+                request.dto.Number,
+                request.dto.Division
+                );
 
         if (rocketLeagueRank is null)
         {
@@ -54,30 +61,16 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
             await _applicationDbContext.SaveChangesAsync();
         }
 
+
+        userGameRank.UpdateRocketLeagueRank(rocketLeagueRank, request.dto.Mode);
+        await _applicationDbContext.SaveChangesAsync();
+
         switch (request.dto.Mode)
         {
-            case "1VS1":
-
-                userGameRank.UpdateRocketLeague1vs1Rank(rocketLeagueRank);
-
-                if (userGameRank.RocketLeague1vs1Rank is null)
-                    throw new ResourceCreationFailedException();
-
-                await _applicationDbContext.SaveChangesAsync();
-
-                return new UpdateRocketLeagueRankResponse(
-                   userGameRank.RocketLeague1vs1Rank.RocketLeagueRankName.ToString(),
-                   userGameRank.RocketLeague1vs1Rank.RocketLeagueRankNumber.ToString(),
-                   userGameRank.RocketLeague1vs1Rank.RocketLeagueDivision.ToString());
-
             case "2VS2":
-
-                userGameRank.UpdateRocketLeague2vs2Rank(rocketLeagueRank);
 
                 if (userGameRank.RocketLeague2vs2Rank is null)
                     throw new ResourceCreationFailedException();
-
-                await _applicationDbContext.SaveChangesAsync();
 
                 return new UpdateRocketLeagueRankResponse(
                    userGameRank.RocketLeague2vs2Rank.RocketLeagueRankName.ToString(),
@@ -85,17 +78,15 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRa
                    userGameRank.RocketLeague2vs2Rank.RocketLeagueDivision.ToString());
 
             case "3VS3":
-                userGameRank.UpdateRocketLeague3vs3Rank(rocketLeagueRank);
 
                 if (userGameRank.RocketLeague3vs3Rank is null)
                     throw new ResourceCreationFailedException();
-
-                await _applicationDbContext.SaveChangesAsync();
 
                 return new UpdateRocketLeagueRankResponse(
                    userGameRank.RocketLeague3vs3Rank.RocketLeagueRankName.ToString(),
                    userGameRank.RocketLeague3vs3Rank.RocketLeagueRankNumber.ToString(),
                    userGameRank.RocketLeague3vs3Rank.RocketLeagueDivision.ToString());
+
             default:
                 throw new ResourceCreationFailedException();
         }
