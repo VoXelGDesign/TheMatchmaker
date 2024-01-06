@@ -1,9 +1,9 @@
-﻿using Contracts.QueueContracts;
+﻿using Contracts.QueueContracts.RocketLeague;
 
 
 namespace Application.Interfaces;
 public interface IQueueRequestPublisher
 {
-    public Task PublishAsync(QueueRequest request);
+    public Task PublishAsync(QueueRocketLeagueLobby request);
 }
 
