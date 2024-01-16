@@ -1,10 +1,13 @@
-﻿using Application.Exceptions.CustomExceptions;
+﻿using Contracts.QueueContracts.RocketLeague.Ranks;
+using Application.Exceptions.CustomExceptions;
 using Contracts.QueueContracts.RocketLeague;
 using Domain.Games.RocketLeague.Ranks;
 using Microsoft.EntityFrameworkCore;
+using Domain.Users.UserQueueInfos;
 using Application.Interfaces;
 using System.Security.Claims;
 using Domain.Users.User;
+using Contracts.Common;
 using Infrastructure;
 using MediatR;
 
@@ -39,44 +42,65 @@ internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
         claimidentity = Guid.Parse(id);
         var userId = new UserId(claimidentity);
 
-        var queueRequest = new Contracts.QueueContracts.RocketLeague.QueueRocketLeagueLobby();
+        var queueRequest = new QueueRocketLeagueLobbyRequest();
 
         var userRanks = await _dbContext.UserGameRanks.SingleOrDefaultAsync(x => x.UserId == userId);
 
-        if (userRanks is null)
+        var queueInfo = await _dbContext.UserQueueInfos.SingleOrDefaultAsync(x => x.UserId == userId);
+
+        if(queueInfo is null)
+        {
+            queueInfo = new UserQueueInfo(userId);
+            _dbContext.UserQueueInfos.Add(queueInfo);
+            _dbContext.SaveChanges();
+        }
+            
+
+        var mode = (RocketLeagueQueueMode)Enum.Parse(typeof(RocketLeagueQueueMode), request.Mode);
+
+        if (userRanks is null || queueInfo is null)
             throw new ResourceMissingException();
 
         RocketLeagueRank? userRank;
 
-        switch (request.Mode) 
+        switch (mode) 
         {
-            case "2VS2":
+            case RocketLeagueQueueMode.TwoVSTwo:
 
                 userRank = userRanks.RocketLeague2vs2Rank;
                 break;
-            case "3VS3":
+            case RocketLeagueQueueMode.ThreeVSThree:
                 userRank = userRanks.RocketLeague3vs3Rank;
                 break;
             default:
-                throw new NotImplementedException();
+                throw new ResourceCreationFailedException();
         }
 
         if (userRank is null)
             throw new ResourceMissingException();
 
-        queueRequest.Mode = request.Mode;
+        if (queueInfo.Status != UserQueueStatus.NotInQueue)
+            throw new ResourceCreationFailedException();
 
-        queueRequest.UserRank = userRank;
+        queueRequest.UserId = new UserIdDto(id);
 
-        var lowerBound = RocketLeagueRank.Create(
+        queueRequest.Mode = mode;
+
+        queueRequest.UserRank = QueueRocketLeagueRank.Create(
+            userRank.RocketLeagueRankName.ToString(),
+            userRank.RocketLeagueRankNumber.ToString(),
+            userRank.RocketLeagueDivision.ToString()
+            ) ?? throw new ResourceCreationFailedException();
+
+        var lowerBound = QueueRocketLeagueRank.Create(
             request.lowerBoundRank.Name,
             request.lowerBoundRank.Number,
-            request.lowerBoundRank.Name);
+            request.lowerBoundRank.Division);
 
-        var upperBound = RocketLeagueRank.Create(
+        var upperBound = QueueRocketLeagueRank.Create(
             request.upperBoundRank.Name,
             request.upperBoundRank.Number,
-            request.upperBoundRank.Name);
+            request.upperBoundRank.Division);
 
         if (lowerBound is null || upperBound is null)
             throw new ResourceMissingException();
