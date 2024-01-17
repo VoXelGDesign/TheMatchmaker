@@ -7,6 +7,9 @@ using Blazored.LocalStorage;
 using MudBlazor;
 using Client.Notifications;
 using Contracts.Common;
+using Contracts.ApiContracts.Queue.Responses;
+using Client.Queue;
+using Contracts.QueueContracts;
 
 
 
@@ -32,17 +35,19 @@ namespace Client.Identity
         private readonly ClaimsPrincipal Unauthenticated =
             new(new ClaimsIdentity());
 
+        private readonly IQueueManager _queueManager;
 
         private readonly ISnackbar _snackbar;
         
 
 
-        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, ISnackbar snackbar, INotificationManager notificationManager)
+        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, ISnackbar snackbar, INotificationManager notificationManager, IQueueManager queueManager)
         {
             _httpClient = httpClientFactory.CreateClient("Auth");
             _localStorage = localStorage;
             _snackbar = snackbar;
             _notificationManager = notificationManager;
+            _queueManager = queueManager;
     }
 
         public async Task<FormResult> RegisterAsync(string email, string password)
@@ -129,17 +134,8 @@ namespace Client.Identity
             await _localStorage.SetItemAsStringAsync("RefreshToken", loginResponse.RefreshToken);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
 
-
-            var responseId = await _httpClient.GetAsync("/Identifier");
-            
-            var userId = await responseId.Content.ReadFromJsonAsync<UserIdDto>();
-
-            await _notificationManager.ConnectToNotificationService();
-
-            if (userId is not null)
-            {
-                await _notificationManager.SubscribeToNotificationService(userId);
-            }          
+            if(_authenticated == true)
+                _snackbar.Add("Loged in!", MudBlazor.Severity.Success);
 
             return new FormResult { Succeeded = true };
 
@@ -156,9 +152,41 @@ namespace Client.Identity
             {
                 // the user info endpoint is secured, so if the user isn't logged in this will fail
                 var userResponse = await _httpClient.GetAsync("manage/info");
+                var userQueueInfoResponse = await _httpClient.GetAsync("api/Queue/Info");
+                var responseId = await _httpClient.GetAsync("/Identifier");
 
                 // throw if user info wasn't retrieved
+                userQueueInfoResponse.EnsureSuccessStatusCode();
+                responseId.EnsureSuccessStatusCode();
                 userResponse.EnsureSuccessStatusCode();
+                
+                var userId = await responseId.Content.ReadFromJsonAsync<UserIdDto>();
+                var queueInfo = await userQueueInfoResponse.Content.ReadFromJsonAsync<UserQueueInfoStatus>();                
+                    
+
+                if (userId is null)
+                    throw new Exception("Cannot fetch user Id");
+
+                if (queueInfo is null)
+                    throw new Exception("Cannot fetch user queue info");                
+
+                if (!_notificationManager.IsConnected())
+                {
+                    try
+                    {
+                        await _notificationManager.ConnectToNotificationService();
+                        await _notificationManager.SubscribeToNotificationService(userId);
+                        _snackbar.Add("Connected to notification hub", Severity.Info);
+                    }
+                    catch 
+                    {
+                        _snackbar.Add("Cannot connect to notification hub", Severity.Error);
+                        throw;
+                    }
+                }
+                    
+
+                _queueManager.SetQueueStatus((QueueStatus)Enum.Parse(typeof(QueueStatus), queueInfo.queueStatus));
 
                 // user is authenticated,so let's build their authenticated identity
                 var userJson = await userResponse.Content.ReadAsStringAsync();
@@ -182,9 +210,10 @@ namespace Client.Identity
                     var id = new ClaimsIdentity(claims, nameof(BearerAuthenticationStateProvider));
                     user = new ClaimsPrincipal(id);
                     _authenticated = true;
+
                 }
             }
-            catch { }
+           catch{ } 
 
             // return the state
             return new AuthenticationState(user);
@@ -197,6 +226,7 @@ namespace Client.Identity
             await _localStorage.RemoveItemAsync("AccessToken");
             await _localStorage.RemoveItemAsync("ExpiresIn");
             await _localStorage.RemoveItemAsync("RefreshToken");
+            await _notificationManager.DisconnectFromNotificationService();
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
             //_notificationService.Notify(Notyfications.SuccessNotyfication("Loged out successfully!"));
         }

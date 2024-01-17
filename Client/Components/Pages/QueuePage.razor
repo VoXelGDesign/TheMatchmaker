@@ -1,29 +1,106 @@
 ﻿@page "/queue-page"
 @attribute [Authorize]
 @inject NavigationManager NavigationManager
+@inject IQueueManager QueueManager
 @using System.Security.Claims
 @using Client.MyAccount
+@using Client.Queue
+@using Contracts.ApiContracts.Queue.Requests
+@using Contracts.QueueContracts
+@using Contracts.QueueContracts.RocketLeague
 
 <MudGrid>
     <MudItem xs="12" Class="px-10 py-5">
         <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
             <MudGrid>
 
+                <MudItem xs="12">
+                    <MudText Color="Color.Primary">Select mode: </MudText>
+                    <MudSelect @bind-Value="mode" Label="Select Mode" HelperText="ex. 2 vs 2" Placeholder="Please Select Mode" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Primary">
+                        <MudSelectItem Value="@(RocketLeagueQueueMode.TwoVSTwo)">2 vs 2</MudSelectItem>
+                        <MudSelectItem Value="@(RocketLeagueQueueMode.ThreeVSThree)">3 vs 3</MudSelectItem>
+                    </MudSelect>
+
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudText Color="Color.Secondary">Set Lower Bound Rank: </MudText>
+                    <MudSelect @bind-Value="lowerBound.Name" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelectItem Value="@("BRONZE")">Bronze</MudSelectItem>
+                        <MudSelectItem Value="@("SILVER")">Silver</MudSelectItem>
+                        <MudSelectItem Value="@("GOLD")">Gold</MudSelectItem>
+                        <MudSelectItem Value="@("DIAMOND")">Diamond</MudSelectItem>
+                        <MudSelectItem Value="@("CHAMPION")">Champion</MudSelectItem>
+                        <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
+                        <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
+                    </MudSelect>
+                    @if (lowerBound.Name != "SUPERSONICLEGEND")
+                    {
+                        <MudSelect @bind-Value="lowerBound.Number" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+
+                            <MudSelectItem Value="@("I")">I</MudSelectItem>
+                            <MudSelectItem Value="@("II")">II</MudSelectItem>
+                            <MudSelectItem Value="@("III")">III</MudSelectItem>
+
+                        </MudSelect>
+                        <MudSelect @bind-Value="lowerBound.Division" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+
+                            <MudSelectItem Value="@("I")">I</MudSelectItem>
+                            <MudSelectItem Value="@("II")">II</MudSelectItem>
+                            <MudSelectItem Value="@("III")">III</MudSelectItem>
+                            <MudSelectItem Value="@("IV")">IV</MudSelectItem>
+
+                        </MudSelect>
+                    }
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudText Color="Color.Secondary">Set upper bound  rank: </MudText>
+                    <MudSelect @bind-Value="upperBound.Name" Label="Select Your Lower Bound Rank Name"  HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelectItem Value="@("BRONZE")">Bronze</MudSelectItem>
+                        <MudSelectItem Value="@("SILVER")">Silver</MudSelectItem>
+                        <MudSelectItem Value="@("GOLD")">Gold</MudSelectItem>
+                        <MudSelectItem Value="@("DIAMOND")">Diamond</MudSelectItem>
+                        <MudSelectItem Value="@("CHAMPION")">Champion</MudSelectItem>
+                        <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
+                        <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
+                    </MudSelect>
+                    @if (upperBound.Name != "SUPERSONICLEGEND")
+                    {
+                        <MudSelect @bind-Value="upperBound.Number" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                            <MudSelectItem Value="@("I")">I</MudSelectItem>
+                            <MudSelectItem Value="@("II")">II</MudSelectItem>
+                            <MudSelectItem Value="@("III")">III</MudSelectItem>
+
+                        </MudSelect>
+                        <MudSelect @bind-Value="upperBound.Division" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                            <MudSelectItem Value="@("I")">I</MudSelectItem>
+                            <MudSelectItem Value="@("II")">II</MudSelectItem>
+                            <MudSelectItem Value="@("III")">III</MudSelectItem>
+                            <MudSelectItem Value="@("IV")">IV</MudSelectItem>
+                        </MudSelect>
+                    }
+                </MudItem>
+
                 <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
 
                     <MudOverlay Visible="true" Absolute="true">
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SimulateProgress">JOIN QUEUE</MudButton>
+                        @if (joinedQueue)
+                        {
+                            <MudButton Variant="Variant.Filled" Disabled="true" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SendQueueRequest">JOINED QUEUE</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SendQueueRequest">JOIN QUEUE</MudButton>
+                        }
+
                     </MudOverlay>
 
                     <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
-                       
-                    
-                    
+
+
                 </MudItem>
 
-                <MudItem xs="12"> 
-                    
-                </MudItem>
 
             </MudGrid>
         </MudCard>
@@ -35,41 +112,85 @@
     [CascadingParameter]
     private Task<AuthenticationState>? AuthState { get; set; }
 
+    private RocketLeagueRankDto lowerBound = new("BRONZE", "I", "I");
+    private RocketLeagueRankDto upperBound = new("BRONZE", "I", "I");
+
+    bool joinedQueue = false;
+    RocketLeagueQueueMode mode = RocketLeagueQueueMode.TwoVSTwo;
+
     public int Value { get; set; }
+    bool _disposed;
+    public void Dispose() => _disposed = true;
 
-    public async void SimulateProgress()
+
+
+    private RocketLeagueRankDto CorrectRank(RocketLeagueRankDto rank)
     {
-        Value = 0;
-        do
+        if (rank.Name == "SUPERSONICLEGEND")
         {
-            if (_disposed)
+            rank.Number = "NONE";
+            rank.Division = "NONE";
+        }
+
+        return rank;
+    }
+
+    private async void SendQueueRequest()
+    {
+        if (joinedQueue)
+            return;
+
+        var request = new QueueRocketLeagueRequest
             {
-                return;
-            }
+                Mode = mode.ToString(),
+                LowerBound = CorrectRank(lowerBound),
+                UpperBound = CorrectRank(upperBound)
+            };
 
-            Value += 4;
-            StateHasChanged();
-            await Task.Delay(500);
 
-        } while (Value < 100);
+        var resultSuccesful = await QueueManager.JoinQueue(request);
 
-        SimulateProgress();
+        if (resultSuccesful)
+        {
+            LunchLoading();
+            joinedQueue = true;
+        }
+
     }
 
 
-    bool _disposed;
-    public void Dispose() => _disposed = true;
+
+    public async void LunchLoading()
+    {
+        Value = 1;
+        do
+        {
+            if (_disposed) return;
+
+            Value += 1;
+            StateHasChanged();
+            await Task.Delay(200);
+
+        } while (Value < 100);
+
+        LunchLoading();
+    }
 
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
 
-
         if (!authState.User.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/");
         }
+
+        if(QueueManager.queueStatus == QueueStatus.JoinedQueue)
+        {
+            NavigationManager.NavigateTo("/queue-waiting");
+        }
+
 
     }
 }

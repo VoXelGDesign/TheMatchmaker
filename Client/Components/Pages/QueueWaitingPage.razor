@@ -1,0 +1,78 @@
+﻿@page "/queue-waiting"
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject IQueueManager QueueManager
+@using System.Security.Claims
+@using Client.MyAccount
+@using Client.Queue
+@using Contracts.ApiContracts.Queue.Requests
+@using Contracts.QueueContracts
+@using Contracts.QueueContracts.RocketLeague
+
+<MudGrid>
+    <MudItem xs="12" Class="px-10 py-5">
+        <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
+            <MudGrid>
+                <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;"><MudText Typo="Typo.h2"><b>WAITING IN QUEUE</b></MudText></MudItem>
+             
+                <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
+                                        
+                    <MudOverlay Visible="true" Absolute="true">                                             
+                        <MudText Typo="Typo.h5" ><b>TIMES OUT IN: </b></MudText>
+                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@QueueManager.Minutes MINUTES @QueueManager.TimerSeconds SECONDS</b></p></MudText>
+                        </MudOverlay>
+
+                    <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
+
+
+                </MudItem>
+
+            </MudGrid>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+    @code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+
+    public int Value { get; set; }
+
+
+    public async void LunchLoading()
+    {
+        Value = 1;
+        do
+        {
+            Value += 1;
+            StateHasChanged();
+            await Task.Delay(200);
+
+        } while (Value < 100);
+
+        LunchLoading();
+    }
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+
+        if (!authState.User.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        if (QueueManager.queueStatus == QueueStatus.LeftQueue)
+        {
+            NavigationManager.NavigateTo("/queue-page");
+        }
+
+        LunchLoading();
+        QueueManager.StateHasChangedDelegate = StateHasChanged;
+    }
+}
