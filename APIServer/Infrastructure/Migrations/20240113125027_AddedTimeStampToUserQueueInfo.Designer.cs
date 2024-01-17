@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113125027_AddedTimeStampToUserQueueInfo")]
+    partial class AddedTimeStampToUserQueueInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,19 +24,6 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Games.RocketLeague.Lobbies.RocketLeague2vs2Lobby", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RocketLeague2vs2Lobbies");
-                });
 
             modelBuilder.Entity("Domain.Users.UserAccounts.UserAccount", b =>
                 {
@@ -280,85 +270,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Games.RocketLeague.Lobbies.RocketLeague2vs2Lobby", b =>
-                {
-                    b.OwnsOne("Domain.Games.RocketLeague.Players.RocketLeaguePlayer", "Player1", b1 =>
-                        {
-                            b1.Property<Guid>("RocketLeague2vs2LobbyId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("DiscordName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player1_DiscordName");
-
-                            b1.Property<bool>("IsReady")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("UserAccountName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player1_Name");
-
-                            b1.Property<string>("UserAccountSteamProfileLink")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player1_SteamProfileLink");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("Player1_UserId");
-
-                            b1.HasKey("RocketLeague2vs2LobbyId");
-
-                            b1.ToTable("RocketLeague2vs2Lobbies");
-
-                            b1.WithOwner()
-                                .HasForeignKey("RocketLeague2vs2LobbyId");
-                        });
-
-                    b.OwnsOne("Domain.Games.RocketLeague.Players.RocketLeaguePlayer", "Player2", b1 =>
-                        {
-                            b1.Property<Guid>("RocketLeague2vs2LobbyId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("DiscordName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player2_DiscordName");
-
-                            b1.Property<bool>("IsReady")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("UserAccountName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player2_Name");
-
-                            b1.Property<string>("UserAccountSteamProfileLink")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Player2_SteamProfileLink");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("Player2_UserId");
-
-                            b1.HasKey("RocketLeague2vs2LobbyId");
-
-                            b1.ToTable("RocketLeague2vs2Lobbies");
-
-                            b1.WithOwner()
-                                .HasForeignKey("RocketLeague2vs2LobbyId");
-                        });
-
-                    b.Navigation("Player1")
-                        .IsRequired();
-
-                    b.Navigation("Player2")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Users.UserGamesRanks.UserGameRank", b =>

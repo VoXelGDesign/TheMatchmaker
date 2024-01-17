@@ -1,10 +1,8 @@
 ﻿using Domain.Games.RocketLeague.Ranks;
 using Domain.Users.User;
-
 using Domain.Users.UserGamesRanks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Infrastructure.Configurations;
 
