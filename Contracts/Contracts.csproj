@@ -10,8 +10,4 @@
     <ProjectReference Include="..\APIServer\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ApiContracts\Queue\Responses\" />
-  </ItemGroup>
-
 </Project>
