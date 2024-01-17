@@ -7,5 +7,7 @@ namespace Client.Notifications
         public Task ConnectToNotificationService();
         public Task SubscribeToNotificationService(UserIdDto userId);
 
+        public Task DisconnectFromNotificationService();
+        public bool IsConnected();
     }
 }
