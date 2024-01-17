@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Contracts.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace NotyficationService
@@ -15,11 +16,25 @@ namespace NotyficationService
             RegisteredClients.Add(userId, connectionId);
         }
 
-        internal void NotifyUser(UserIdDto userId)
+        internal void NotifyUserJoinedLobby(UserIdDto userId)
         {
             var connectionId = RegisteredClients.GetValueOrDefault(userId);
             if (connectionId is not null)
-                Clients.Client(connectionId.value).RecieveNotification();
+                Clients.Client(connectionId.value).RecieveJoinedLobbyNotyfication();
+        }
+
+        internal void NotifyUserJoinedQueue(UserIdDto userId)
+        {
+            var connectionId = RegisteredClients.GetValueOrDefault(userId);
+            if (connectionId is not null)
+                Clients.Client(connectionId.value).RecieveJoinedQueueNotification();
+        }
+
+        internal void NotifyUserLeftQueue(UserIdDto userId)
+        {
+            var connectionId = RegisteredClients.GetValueOrDefault(userId);
+            if (connectionId is not null)
+                Clients.Client(connectionId.value).RecieveLeftQueueNotification();
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)
@@ -35,12 +50,13 @@ namespace NotyficationService
     }
 
     internal record ConnectionId(string value);
-    public record UserIdDto(string value);
 
 
     public interface INotificationClient
     {
-        public Task RecieveNotification();
+        public Task RecieveJoinedQueueNotification();
+        public Task RecieveJoinedLobbyNotyfication();
+        public Task RecieveLeftQueueNotification();
     }
 
 }

@@ -1,9 +1,7 @@
 
-using Contracts.QueueContracts;
-using Contracts.QueueContracts.RocketLeague;
+using Contracts.Common;
 using MassTransit;
 using NotyficationService;
-using NotyficationService.Consumers;
 using System.Reflection;
 
 
@@ -37,11 +35,6 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host(builder.Configuration["AzureServiceBusConnectionString"]);
 
-        cfg.SubscriptionEndpoint<QueueRocketLeagueLobby>("queue-request-consumer", e =>
-        {
-            e.ConfigureConsumer<QueueRequestConsumer>(context);
-        });
-
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -59,13 +52,31 @@ app.UseHttpsRedirection();
 
 app.MapHub<NotificationHub>("notyfications");
 
-app.MapPost("/notifyClient", (string userGuid, NotificationHub hub) =>
+app.MapPost("/notifyClientJoinedQueue", (string userGuid, NotificationHub hub) =>
 {
     var userId = new UserIdDto(userGuid);
-    hub.NotifyUser(userId);
+    hub.NotifyUserJoinedQueue(userId);
     return;
 })
-.WithName("NotifyClient")
+.WithName("NotifyClientJoinedQueue")
+.WithOpenApi();
+
+app.MapPost("/notifyClientLeftQueue", (string userGuid, NotificationHub hub) =>
+{
+    var userId = new UserIdDto(userGuid);
+    hub.NotifyUserLeftQueue(userId);
+    return;
+})
+.WithName("NotifyClientLeftQueue")
+.WithOpenApi();
+
+app.MapPost("/notifyClientJoinedLobby", (string userGuid, NotificationHub hub) =>
+{
+    var userId = new UserIdDto(userGuid);
+    hub.NotifyUserJoinedLobby(userId);
+    return;
+})
+.WithName("NotifyClientJoinedLobby")
 .WithOpenApi();
 
 app.UseCors("AllowMyOrigin");
