@@ -1,6 +1,9 @@
 ﻿using Application.Queue;
 using Application.Users.UserGameRanks.RocketLeague.Queries;
+using Application.Users.UserQueueInfos.Queries;
 using Contracts.ApiContracts.Queue.Requests;
+using Contracts.ApiContracts.Queue.Responses;
+using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Responses;
 using Contracts.QueueContracts.RocketLeague;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,5 +26,10 @@ namespace Interface.Controllers
         [HttpPost("SendRequest")]
         public async Task RequestQueue([FromBody] QueueRocketLeagueRequest request)
         => await _mediator.Send(new QueueRequestCommand(request.Mode, request.LowerBound, request.UpperBound));
+
+
+        [HttpGet("Info")]
+        public async Task<ActionResult<UserQueueInfoStatus>> GetRocketLeagueRank()
+        => await _mediator.Send(new GetUserQueueInfoQuery());
     }
 }

@@ -76,8 +76,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 // End Swagger
 
+builder.Services.AddScoped<IQueueRequestPublisher, QueueRequestPublisher>();
+builder.Services.AddScoped<IQueueStatusChangedPublisher, QueueStatusChangedPublisher>();
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumers(Assembly.GetAssembly(typeof(Infrastructure.Publishers.QueueRequestPublisher)));
     x.SetKebabCaseEndpointNameFormatter();
     x.UsingAzureServiceBus((context, cfg) =>
     {
@@ -86,7 +89,7 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddScoped<IQueueRequestPublisher, QueueRequestPublisher>();
+
 
 var app = builder.Build();
 
