@@ -5,15 +5,15 @@ using Contracts.QueueContracts.RocketLeague;
 namespace Infrastructure.Publishers;
 public class QueueRequestPublisher : IQueueRequestPublisher
 {
-    private readonly IPublishEndpoint _bus;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public QueueRequestPublisher(IPublishEndpoint bus)
+    public QueueRequestPublisher(IPublishEndpoint publishEndpoint)
     {
-        _bus = bus;
+        _publishEndpoint = publishEndpoint;
     }
-    public async Task PublishAsync(QueueRocketLeagueLobby queueRequest)
+    public async Task PublishAsync(QueueRocketLeagueLobbyRequest queueRequest)
     {
-       await _bus.Publish(queueRequest);
+        await _publishEndpoint.Publish(queueRequest);
     }
 }
 

@@ -4,6 +4,6 @@
 namespace Application.Interfaces;
 public interface IQueueRequestPublisher
 {
-    public Task PublishAsync(QueueRocketLeagueLobby request);
+    public Task PublishAsync(QueueRocketLeagueLobbyRequest request);
 }
 
