@@ -1,6 +1,6 @@
-﻿namespace Contracts.QueueContracts;
+﻿namespace Contracts.LobbyContracts;
 
-public static class RequestLifetime
+public static class LobbyLifetime
 {
     private const int numberOfMinutes = 5;
     public static int LifetimeMinutes => numberOfMinutes;
