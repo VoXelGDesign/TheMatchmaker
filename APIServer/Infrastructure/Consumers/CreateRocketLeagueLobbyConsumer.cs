@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Infrastructure.Consumers
 {
-    internal class CreateRocketLeagueLobbyConsumer : IConsumer<CreateRocketLeagueLobbyRequest>
+    public class CreateRocketLeagueLobbyConsumer : IConsumer<CreateRocketLeagueLobbyRequest>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IQueueStatusChangedPublisher _queueStatusChangedPublisher;
@@ -24,29 +24,30 @@ namespace Infrastructure.Consumers
             var timeStamp = context.Message.TimeStamp;
 
             var firstId = context.Message.userIds[0].UserId;
-
+            var firstUserId = new UserId(Guid.Parse(firstId));
 
             if (context.Message.userIds.Count < 2)
             {
                 var queueInfo = await _dbContext.UserQueueInfos
-                    .FirstOrDefaultAsync(x => x.UserId.Id.ToString() == firstId);
+                    .FirstOrDefaultAsync(x => x.UserId == firstUserId);
                 queueInfo?.SetStatusNotInQueue(timeStamp);
                 return;
             }
 
             var secondId = context.Message.userIds[1].UserId;
+            var secondUserId = new UserId(Guid.Parse(secondId));
 
             var firstUserAccount = await _dbContext.UserAccounts
-                .FirstOrDefaultAsync(x => x.Id.Id.ToString() == firstId);
+                .FirstOrDefaultAsync(x => x.Id == firstUserId);
 
             var secondUserAccount = await _dbContext.UserAccounts
-                .FirstOrDefaultAsync(x => x.Id.Id.ToString() == secondId);
+                .FirstOrDefaultAsync(x => x.Id == secondUserId);
 
             var firstQueueInfo = await _dbContext.UserQueueInfos
-                .FirstOrDefaultAsync(x => x.UserId.Id.ToString() == firstId);
+                .FirstOrDefaultAsync(x => x.UserId == firstUserId);
 
             var secondQueueInfo = await _dbContext.UserQueueInfos
-                .FirstOrDefaultAsync(x => x.UserId.Id.ToString() == secondId);
+                .FirstOrDefaultAsync(x => x.UserId == secondUserId);
 
             if (firstUserAccount is null || secondUserAccount is null)
             {
@@ -65,11 +66,15 @@ namespace Infrastructure.Consumers
             {
                 case 2:
 
-                    RocketLeague2vs2Lobby.Create(player1, player2);
+                    var lobby = RocketLeague2vs2Lobby.Create(player1, player2);
+
+                    _dbContext.RocketLeague2vs2Lobbies.Add(lobby);
+                    
 
                     firstQueueInfo.SetStatusInLobby(timeStamp);
                     secondQueueInfo.SetStatusInLobby(timeStamp);
 
+                    await _dbContext.SaveChangesAsync();
                     await _queueStatusChangedPublisher
                         .PublishAsync(new QueueStatusChanged(context.Message.userIds[0], QueueStatus.JoinedLobby));
 
@@ -78,12 +83,12 @@ namespace Infrastructure.Consumers
 
                     break;
                 case 3:
-
+                    var thirdUserId = new UserId(Guid.Parse(context.Message.userIds[2].UserId));
                     var thirdUserAccount = await _dbContext.UserAccounts
-                        .FirstOrDefaultAsync(x => x.Id.Id.ToString() == context.Message.userIds[2].UserId);
+                        .FirstOrDefaultAsync(x => x.Id == thirdUserId);
 
                     var thirdQueueInfo = await _dbContext.UserQueueInfos
-                        .FirstOrDefaultAsync(x => x.UserId.Id.ToString() == context.Message.userIds[2].UserId);
+                        .FirstOrDefaultAsync(x => x.UserId == thirdUserId);
 
                     if (thirdQueueInfo is null)
                         throw new Exception("INTERFACE_INCOSISTENCY_IN_DATABASE");

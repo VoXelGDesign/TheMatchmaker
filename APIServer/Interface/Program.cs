@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Middleware;
 using Azure.Messaging;
 using Infrastructure;
+using Infrastructure.BackgroundTasks;
 using Infrastructure.Publishers;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
@@ -89,7 +90,7 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-
+builder.Services.AddHostedService<RemoveOutdatedLobby>();
 
 var app = builder.Build();
 
