@@ -58,31 +58,23 @@ namespace Client.Notifications
             _hubConnection.On("RecieveJoinedQueueNotification", () =>
             {
                 _snackbar.Add("Joined Queue!", MudBlazor.Severity.Success);
-                _queueManager.SetStatusJoinedQueue();
+                _queueManager.UpdateQueueStatus();
                 _navigationManager.NavigateTo("queue-waiting");
             });
 
             _hubConnection.On("RecieveLeftQueueNotification", () =>
             {
                 _snackbar.Add("Left The Queue!", MudBlazor.Severity.Error);
-                _queueManager.SetStatusRemovedFromQueue();
+                _queueManager.UpdateQueueStatus();
                 _navigationManager.NavigateTo("queue-page");
             });
 
             _snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
             _hubConnection.On("RecieveJoinedLobbyNotyfication", () =>
             {
-                _queueManager.SetStatusJoinedLobby();
-                _snackbar.Add("Match Found!", MudBlazor.Severity.Success, config =>
-                    {        
-                        config.Action = "ACCEPT";
-                        config.ActionColor = Color.Primary;
-                        config.Onclick = snackbar =>
-                        {
-                            AcceptLobby();
-                            return Task.CompletedTask;
-                        };
-                    });
+                _snackbar.Add("Joined Lobby!", MudBlazor.Severity.Success);
+                _queueManager.UpdateQueueStatus();
+                _navigationManager.NavigateTo("lobby");                              
             });
 
             
