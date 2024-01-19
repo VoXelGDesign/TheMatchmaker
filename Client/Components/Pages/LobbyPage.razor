@@ -1,0 +1,170 @@
+﻿@page "/lobby"
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject IQueueManager QueueManager
+@inject IRocketLeagueLobbyManager LobbyManager
+@using System.Security.Claims
+@using Client.Lobby
+@using Client.MyAccount
+@using Client.Queue
+@using Contracts.ApiContracts.Lobby.RocketLeague
+@using Contracts.ApiContracts.Queue.Requests
+@using Contracts.Common
+@using Contracts.QueueContracts
+@using Contracts.QueueContracts.RocketLeague
+
+<MudGrid>
+
+    @if (player1 is not null)
+    {
+        <MudItem sm="12" lg="@cardSize" Class="pa-10">
+            <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
+
+                <MudText Typo="Typo.h3"><b>PLAYER 1</b></MudText>
+                <MudDivider></MudDivider>
+                
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-8">
+                    <MudAvatar Elevation="4" Style="width: 150px; height: 150px;" Color="Color.Primary">
+                        <MudText Class="mt-2" Typo="Typo.h1" Color="Color.Dark"><b>@player1.UserAccountName[0].ToString()</b></MudText>
+                    </MudAvatar>
+                </MudItem>
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-2">
+                    <MudText Typo="Typo.h2"><b>@player1.UserAccountName</b></MudText>
+                    </MudItem>
+                <MudItem xs="12">
+                    
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>DISCORD NAME: </b></MudText>
+
+                    <MudPaper Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player1.DiscordName</b>
+                    </MudPaper>
+
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>STEAM PROFILE: </b></MudText>
+
+                    <MudPaper Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player1.UserAccountSteamProfileLink</b>
+                    </MudPaper>
+                    
+                </MudItem>
+
+            </MudCard>
+        </MudItem>
+    }
+    @if (player2 is not null)
+    {
+        <MudItem sm="12" lg="@cardSize" Class="pa-10">
+            <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
+
+                <MudText Typo="Typo.h3"><b>PLAYER 2</b></MudText>
+                <MudDivider></MudDivider>
+
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-8">
+                    <MudAvatar Elevation="4" Style="width: 150px; height: 150px;" Color="Color.Primary">
+                        <MudText Class="mt-2" Typo="Typo.h1" Color="Color.Dark"><b>@player2.UserAccountName[0].ToString()</b></MudText>
+                    </MudAvatar>
+                </MudItem>
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-2">
+                    <MudText Typo="Typo.h2"><b>@player2.UserAccountName</b></MudText>
+                </MudItem>
+                <MudItem xs="12">
+
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>DISCORD NAME: </b></MudText>
+
+                    <MudPaper  Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player2.DiscordName</b>
+                    </MudPaper>
+
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>STEAM PROFILE: </b></MudText>
+
+                    <MudPaper  Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player2.UserAccountSteamProfileLink</b>
+                    </MudPaper>
+
+                </MudItem>
+
+            </MudCard>
+        </MudItem>
+    }
+
+    @if (player3 is not null)
+    {
+        <MudItem sm="12" lg="@cardSize" Class="pa-10">
+            <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
+
+                <MudText Typo="Typo.h3"><b>PLAYER 3</b></MudText>
+                <MudDivider></MudDivider>
+
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-8">
+                    <MudAvatar Elevation="4" Style="width: 150px; height: 150px;" Color="Color.Primary">
+                        <MudText Class="mt-2" Typo="Typo.h1" Color="Color.Dark"><b>@player3.UserAccountName[0].ToString()</b></MudText>
+                    </MudAvatar>
+                </MudItem>
+                <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-2">
+                    <MudText Typo="Typo.h2"><b>@player3.UserAccountName</b></MudText>
+                </MudItem>
+                <MudItem xs="12">
+
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>DISCORD NAME: </b></MudText>
+
+                    <MudPaper Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player3.DiscordName</b>
+                    </MudPaper>
+
+                    <MudText Class="mt-4" Typo="Typo.body1"><b>STEAM PROFILE: </b></MudText>
+
+                    <MudPaper Class="d-flex align-center justify-center flex-grow-1 gap-4 mt-4 mud-theme-primary" Style=" width: 100%; height: 60px;">
+                        <b>@player3.UserAccountSteamProfileLink</b>
+                    </MudPaper>
+
+                </MudItem>
+
+            </MudCard>
+        </MudItem>
+    }
+
+
+</MudGrid>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+    RocketLeaguePlayerDto? player1;
+    RocketLeaguePlayerDto? player2;
+    RocketLeaguePlayerDto? player3 /* = new RocketLeaguePlayerDto(new UserIdDto("asd-asd-asd"),"Dummy", "https://www.dummylink.com/0-129312-0390123-01923","dummyplayer", false) */;
+    RocketLeague2vs2LobbyResponse? rocketLeague2Vs2LobbyResponse;
+
+    private int cardSize
+    => player3 is null ? player2 is null? 12 : 6 : 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+
+        if (!authState.User.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        if (QueueManager.queueStatus == QueueStatus.LeftQueue)
+        {
+            NavigationManager.NavigateTo("/queue-page");
+        }
+
+        if (QueueManager.queueStatus == QueueStatus.JoinedQueue)
+        {
+            NavigationManager.NavigateTo("/queue-waiting");
+        }
+
+        await LobbyManager.UpdateLobbyStatus();
+        rocketLeague2Vs2LobbyResponse = LobbyManager.GetUserLobby();
+
+        if (rocketLeague2Vs2LobbyResponse is not null)
+        {
+            player1 = rocketLeague2Vs2LobbyResponse.Player1;
+            player2 = rocketLeague2Vs2LobbyResponse.Player2;
+        }
+
+        
+    }
+}
