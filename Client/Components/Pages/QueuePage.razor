@@ -191,6 +191,10 @@
             NavigationManager.NavigateTo("/queue-waiting");
         }
 
+        if (QueueManager.queueStatus == QueueStatus.JoinedLobby)
+        {
+            NavigationManager.NavigateTo("/lobby");
+        }
 
     }
 }

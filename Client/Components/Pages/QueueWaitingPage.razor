@@ -19,7 +19,7 @@
                                         
                     <MudOverlay Visible="true" Absolute="true">                                             
                         <MudText Typo="Typo.h5" ><b>TIMES OUT IN: </b></MudText>
-                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@QueueManager.Minutes MINUTES @QueueManager.TimerSeconds SECONDS</b></p></MudText>
+                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@QueueManager.TimerMinutes MINUTES @QueueManager.TimerSeconds SECONDS</b></p></MudText>
                         </MudOverlay>
 
                     <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
@@ -70,6 +70,11 @@
         if (QueueManager.queueStatus == QueueStatus.LeftQueue)
         {
             NavigationManager.NavigateTo("/queue-page");
+        }
+
+        if (QueueManager.queueStatus == QueueStatus.JoinedLobby)
+        {
+            NavigationManager.NavigateTo("/lobby");
         }
 
         LunchLoading();
