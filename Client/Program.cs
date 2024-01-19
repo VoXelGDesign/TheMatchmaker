@@ -9,6 +9,7 @@ using Client.MyAccount;
 using Client.Identity;
 using Client.Queue;
 using Client;
+using Client.Lobby;
 
 
 
@@ -19,6 +20,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped<INotificationManager, NotificationManager>();
 builder.Services.AddScoped<IQueueManager, QueueManager>();
+builder.Services.AddScoped<IRocketLeagueLobbyManager, RocketLeagueLobbyManager>();
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<BearerHandler>();
