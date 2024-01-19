@@ -145,30 +145,24 @@ namespace Client.Identity
         {
             _authenticated = false;
 
-            // default to not authenticated
             var user = Unauthenticated;
 
             try
             {
-                // the user info endpoint is secured, so if the user isn't logged in this will fail
                 var userResponse = await _httpClient.GetAsync("manage/info");
-                var userQueueInfoResponse = await _httpClient.GetAsync("api/Queue/Info");
+                
                 var responseId = await _httpClient.GetAsync("/Identifier");
 
-                // throw if user info wasn't retrieved
-                userQueueInfoResponse.EnsureSuccessStatusCode();
                 responseId.EnsureSuccessStatusCode();
                 userResponse.EnsureSuccessStatusCode();
                 
                 var userId = await responseId.Content.ReadFromJsonAsync<UserIdDto>();
-                var queueInfo = await userQueueInfoResponse.Content.ReadFromJsonAsync<UserQueueInfoStatus>();                
+                               
                     
 
                 if (userId is null)
                     throw new Exception("Cannot fetch user Id");
-
-                if (queueInfo is null)
-                    throw new Exception("Cannot fetch user queue info");                
+                
 
                 if (!_notificationManager.IsConnected())
                 {
@@ -184,9 +178,9 @@ namespace Client.Identity
                         throw;
                     }
                 }
-                    
 
-                _queueManager.SetQueueStatus((QueueStatus)Enum.Parse(typeof(QueueStatus), queueInfo.queueStatus));
+
+                await _queueManager.UpdateQueueStatus();
 
                 // user is authenticated,so let's build their authenticated identity
                 var userJson = await userResponse.Content.ReadAsStringAsync();
@@ -221,14 +215,12 @@ namespace Client.Identity
 
         public async Task LogoutAsync()
         {
-            // Remove the access token from storage
             await _localStorage.RemoveItemAsync("TokenType");
             await _localStorage.RemoveItemAsync("AccessToken");
             await _localStorage.RemoveItemAsync("ExpiresIn");
             await _localStorage.RemoveItemAsync("RefreshToken");
             await _notificationManager.DisconnectFromNotificationService();
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-            //_notificationService.Notify(Notyfications.SuccessNotyfication("Loged out successfully!"));
         }
 
 
