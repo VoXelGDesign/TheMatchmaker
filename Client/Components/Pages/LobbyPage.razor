@@ -10,11 +10,18 @@
 @using Contracts.ApiContracts.Lobby.RocketLeague
 @using Contracts.ApiContracts.Queue.Requests
 @using Contracts.Common
+@using Contracts.LobbyContracts
 @using Contracts.QueueContracts
 @using Contracts.QueueContracts.RocketLeague
-
 <MudGrid>
-
+    <MudItem xxl="12" lg="@cardSize" Class="pa-10">
+        @if (secondsLeft >= 0 || minutesLeft >= 0)
+        {
+            <MudText>LOBBY DURATION TIME: @minutesLeft MINUTES @secondsLeft SECONDS </MudText>
+        }
+    </MudItem>
+</MudGrid>
+<MudGrid>   
     @if (player1 is not null)
     {
         <MudItem sm="12" lg="@cardSize" Class="pa-10">
@@ -135,6 +142,59 @@
     RocketLeague2vs2LobbyResponse? rocketLeague2Vs2LobbyResponse;
     RocketLeague3vs3LobbyResponse? rocketLeague3Vs3LobbyResponse;
 
+    int secondsLeft;
+    int minutesLeft;
+
+    private void UpdateMinutesLeft()
+    {
+        if (rocketLeague2Vs2LobbyResponse is not null)
+        {
+            minutesLeft = LobbyLifetime.LifetimeMinutes - DateTime.UtcNow.Subtract(rocketLeague2Vs2LobbyResponse.CreationDate).Minutes - 1;
+            return;
+        }
+
+        if (rocketLeague3Vs3LobbyResponse is not null)
+        {
+            minutesLeft = LobbyLifetime.LifetimeMinutes - DateTime.UtcNow.Subtract(rocketLeague3Vs3LobbyResponse.CreationDate).Minutes - 1;
+            return;
+        }
+
+
+        minutesLeft = 0;
+    }
+
+    private void UpdateSecondsLeft()
+    {
+        if (rocketLeague2Vs2LobbyResponse is not null)
+        {
+            secondsLeft = 60 - DateTime.UtcNow.Subtract(rocketLeague2Vs2LobbyResponse.CreationDate).Seconds;
+            return;
+        }
+
+
+        if (rocketLeague3Vs3LobbyResponse is not null)
+        {
+            secondsLeft = 60 - DateTime.UtcNow.Subtract(rocketLeague3Vs3LobbyResponse.CreationDate).Seconds;
+            return;
+        }
+        
+
+        secondsLeft = 0;
+    }
+
+    private async void UpdateTime()
+    {
+        while (rocketLeague2Vs2LobbyResponse is not null ||
+        rocketLeague3Vs3LobbyResponse is not null)
+        {
+            await Task.Delay(1000);
+            UpdateMinutesLeft();
+            UpdateSecondsLeft();
+            StateHasChanged();
+        }
+
+    }
+
     private int cardSize
     => player3 is null ? player2 is null? 12 : 6 : 4;
 
@@ -174,6 +234,6 @@
             player3 = rocketLeague3Vs3LobbyResponse.Player3;
         }
 
-        
+        UpdateTime();
     }
 }

@@ -54,6 +54,6 @@ public class GetRocketLeague2vs2Lobby : IRequestHandler<GetRocketLeague2vs2Lobby
             lobby.Player2.IsReady
             );       
 
-        return new RocketLeague2vs2LobbyResponse(player1Dto, player2Dto);
+        return new RocketLeague2vs2LobbyResponse(player1Dto, player2Dto, lobby.CreationDate);
     }
 }

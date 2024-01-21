@@ -65,6 +65,6 @@ public class GetRocketLeague3vs3Lobby : IRequestHandler<GetRocketLeague3vs3Lobby
             lobby.Player3.IsReady
             );
 
-        return new RocketLeague3vs3LobbyResponse(player1Dto, player2Dto, player3Dto);
+        return new RocketLeague3vs3LobbyResponse(player1Dto, player2Dto, player3Dto, lobby.CreationDate);
     }
 }

@@ -36,7 +36,7 @@ namespace Client.Lobby
             if (result2vs2.IsSuccessStatusCode)
             {              
                 _response2vs2 =
-                await result2vs2.Content.ReadFromJsonAsync<RocketLeague2vs2LobbyResponse>();
+                await result2vs2.Content.ReadFromJsonAsync<RocketLeague2vs2LobbyResponse>();              
                 return;
             }
 

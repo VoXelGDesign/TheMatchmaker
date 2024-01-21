@@ -1,4 +1,4 @@
 ﻿namespace Contracts.ApiContracts.Queue.Responses;
 
-public record UserQueueInfoStatus(string queueStatus);
+public record UserQueueInfoStatus(string QueueStatus, DateTime ChangeTime);
 

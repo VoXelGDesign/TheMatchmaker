@@ -19,7 +19,7 @@
                                         
                     <MudOverlay Visible="true" Absolute="true">                                             
                         <MudText Typo="Typo.h5" ><b>TIMES OUT IN: </b></MudText>
-                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@QueueManager.TimerMinutes MINUTES @QueueManager.TimerSeconds SECONDS</b></p></MudText>
+                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@minutesLeft MINUTES @secondsLeft SECONDS</b></p></MudText>
                         </MudOverlay>
 
                     <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
@@ -32,7 +32,7 @@
     </MudItem>
 </MudGrid>
 
-    @code {
+@code {
 
     [CascadingParameter]
     private Task<AuthenticationState>? AuthState { get; set; }
@@ -40,6 +40,44 @@
 
     public int Value { get; set; }
 
+    int secondsLeft = 0;
+    int minutesLeft = 0;
+
+    private void UpdateMinutesLeft()
+    {      
+        if (QueueManager.JoinedQueueDate is not null)
+        {
+            var joinedDate = QueueManager.JoinedQueueDate.Value;
+            minutesLeft = RequestLifetime.LifetimeMinutes - DateTime.UtcNow.Subtract(joinedDate).Minutes - 1;
+            return;
+        }
+
+        minutesLeft = 0;
+    }
+
+    private void UpdateSecondsLeft()
+    {
+
+        if (QueueManager.JoinedQueueDate is not null)
+        {
+            var joinedDate = QueueManager.JoinedQueueDate.Value;
+            secondsLeft = 60 - DateTime.UtcNow.Subtract(joinedDate).Seconds;
+            return;
+        }
+
+        secondsLeft = 0;
+    }
+
+    private async void UpdateTime()
+    { 
+        while (QueueManager.JoinedQueueDate is not null)
+        {
+            await Task.Delay(1000);
+            UpdateMinutesLeft();
+            UpdateSecondsLeft();
+        }
+        
+    }
 
     public async void LunchLoading()
     {
@@ -78,6 +116,6 @@
         }
 
         LunchLoading();
-        QueueManager.StateHasChangedDelegate = StateHasChanged;
+        UpdateTime();
     }
 }

@@ -13,14 +13,8 @@ public class QueueManager : IQueueManager
     private readonly HttpClient _httpClient;
     private readonly ISnackbar _snackbar;
     private readonly NavigationManager _navigationManager;
-    private QueueStatus _status = QueueStatus.LeftQueue;
-    public int TimerMinutes
-    => _seconds / 60;
-    public int TimerSeconds 
-        =>  _seconds % 60;
-
-    private int _seconds = RequestLifetime.LifetimeSeconds;
-    public Delegate? StateHasChangedDelegate { get; set; }
+    private QueueStatus _status = QueueStatus.LeftQueue;    
+    public DateTime? JoinedQueueDate { get; private set;}
 
     public QueueStatus queueStatus 
         => _status;
@@ -39,19 +33,20 @@ public class QueueManager : IQueueManager
     }
     
     public async Task UpdateQueueStatus()
-    {
+    {        
         var result = await _httpClient.GetAsync("api/Queue/Info");
         var queueInfo = await result.Content.ReadFromJsonAsync<UserQueueInfoStatus>();
 
         if (queueInfo is null) 
             return;
 
-        var status = (QueueStatus)Enum.Parse(typeof(QueueStatus), queueInfo.queueStatus);
+        var status = (QueueStatus)Enum.Parse(typeof(QueueStatus), queueInfo.QueueStatus);
 
         if (_status == status)
             return;
 
-        _status = status;       
+        JoinedQueueDate = null;
+        _status = status;      
 
         switch (_status)
         {
@@ -59,8 +54,7 @@ public class QueueManager : IQueueManager
                 _navigationManager.NavigateTo("queue-page");
                 break;
             case QueueStatus.JoinedQueue:
-                ResetTimer();
-                LunchTimer();
+                JoinedQueueDate = queueInfo.ChangeTime;
                 _navigationManager.NavigateTo("queue-waiting");
                 break;
             case QueueStatus.JoinedLobby:
@@ -71,18 +65,7 @@ public class QueueManager : IQueueManager
         
     }
 
-    private async void LunchTimer()
-    {
-        while (_seconds > 0)
-        {
-            StateHasChangedDelegate?.DynamicInvoke();
-            _seconds -= 1;           
-            await Task.Delay(1000);
-        }
-    }
-
-    private void ResetTimer()
-        => _seconds = RequestLifetime.LifetimeSeconds;
+    
 
     
     

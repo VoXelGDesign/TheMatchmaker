@@ -57,7 +57,7 @@ internal class GetUserQueueInfo : IRequestHandler<GetUserQueueInfoQuery, UserQue
                 throw new ResourceMissingException();
         }
 
-        return new UserQueueInfoStatus(status.ToString());
+        return new UserQueueInfoStatus(status.ToString(), userQueueInfo.LastChangeDate);
     }
 }
     
