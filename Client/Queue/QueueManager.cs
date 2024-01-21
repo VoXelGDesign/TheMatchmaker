@@ -73,7 +73,7 @@ public class QueueManager : IQueueManager
 
     private async void LunchTimer()
     {
-        while (TimerSeconds > 0)
+        while (_seconds > 0)
         {
             StateHasChangedDelegate?.DynamicInvoke();
             _seconds -= 1;           

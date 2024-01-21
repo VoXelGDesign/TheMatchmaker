@@ -66,9 +66,9 @@ namespace Infrastructure.Consumers
             {
                 case 2:
 
-                    var lobby = RocketLeague2vs2Lobby.Create(player1, player2);
+                    var lobby2vs2 = RocketLeague2vs2Lobby.Create(player1, player2);
 
-                    _dbContext.RocketLeague2vs2Lobbies.Add(lobby);
+                    _dbContext.RocketLeague2vs2Lobbies.Add(lobby2vs2);
                     
 
                     firstQueueInfo.SetStatusInLobby(timeStamp);
@@ -103,11 +103,16 @@ namespace Infrastructure.Consumers
 
                     var player3 = RocketLeaguePlayer.Create(thirdUserAccount);
 
-                    RocketLeague3vs3Lobby.Create(player1, player2, player3);
+                    var lobby3vs3 = RocketLeague3vs3Lobby.Create(player1, player2, player3);
+
+
+                    _dbContext.RocketLeague3vs3Lobbies.Add(lobby3vs3);
 
                     firstQueueInfo.SetStatusInLobby(timeStamp);
                     secondQueueInfo.SetStatusInLobby(timeStamp);
                     thirdQueueInfo?.SetStatusInLobby(timeStamp);
+
+                    await _dbContext.SaveChangesAsync();
 
                     await _queueStatusChangedPublisher
                         .PublishAsync(new QueueStatusChanged(context.Message.userIds[0], QueueStatus.JoinedLobby));

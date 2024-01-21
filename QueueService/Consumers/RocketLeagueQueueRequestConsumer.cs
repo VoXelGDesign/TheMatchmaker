@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace QueueService.Consumers;
 
-public class RocketLeagueQueueRequestConsumer : IConsumer<QueueRocketLeagueLobbyRequest>
+public class RocketLeagueQueueRequestConsumer : IConsumer<QueueRocketLeagueLobbyRequestDto>
 {
     private readonly IServiceProvider _serviceProvider;
     public RocketLeagueQueueRequestConsumer(IServiceProvider serviceProvider)
@@ -11,7 +11,7 @@ public class RocketLeagueQueueRequestConsumer : IConsumer<QueueRocketLeagueLobby
         _serviceProvider = serviceProvider;
     }
 
-    public async Task Consume(ConsumeContext<QueueRocketLeagueLobbyRequest> context)
+    public async Task Consume(ConsumeContext<QueueRocketLeagueLobbyRequestDto> context)
     {
         var request = context.Message;
 
@@ -20,8 +20,11 @@ public class RocketLeagueQueueRequestConsumer : IConsumer<QueueRocketLeagueLobby
             .OfType<RocketLeagueQueue>()
             .SingleOrDefault();
 
-        if (rocketLeagueQueue is not null && request is not null)
-            await rocketLeagueQueue.AddToQueue(request);
+        var queueEntry = QueueRocketLeagueLobbyRequest.CreateFromDto(request);
 
+        if (rocketLeagueQueue is null || request is null || queueEntry is null)
+            return;
+
+        await rocketLeagueQueue.AddToQueue(queueEntry);
     }
 }

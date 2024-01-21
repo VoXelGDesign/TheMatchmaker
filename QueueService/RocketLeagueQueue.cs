@@ -3,6 +3,7 @@ using Contracts.QueueContracts;
 using Contracts.QueueContracts.RocketLeague;
 using Contracts.QueueContracts.RocketLeague.Ranks;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.ObjectPool;
 using QueueService.Publishers.CreateRocketLeagueLobby;
 using QueueService.Publishers.JoinedQueue;
 using QueueService.Publishers.RemovedFromQueue;
@@ -121,6 +122,7 @@ public class RocketLeagueQueue : BackgroundService
     private IEnumerable<QueueRocketLeagueLobbyRequest> FindMatches(QueueRocketLeagueLobbyRequest checkedRequest)
             => QueueRequests.Where(x =>
                     x.Mode == checkedRequest.Mode &&
+                    x.Region == checkedRequest.Region &&
                     IsRankWithinBounds(checkedRequest.UserRank, x.LowerBoundRank, x.UpperBoundRank) &&
                     IsRankWithinBounds(x.UserRank, checkedRequest.LowerBoundRank, checkedRequest.UpperBoundRank)
                 );
@@ -139,21 +141,42 @@ public class RocketLeagueQueue : BackgroundService
         QueueRocketLeagueRank checkedRank,
         QueueRocketLeagueRank lowerBound,
         QueueRocketLeagueRank upperBound)
-        => IsAboveOrEqualLowerBound(checkedRank, lowerBound) &&
-        IsBelowOrEqualUpperBound(checkedRank, upperBound);
+    {
+        if(!IsRankNameAboveOrEqual(checkedRank,lowerBound))
+            return false;
 
-    private bool IsAboveOrEqualLowerBound(
+        if (!IsRankNameBelowOrEqual(checkedRank, upperBound))
+            return false;
+
+        if (!IsNumberAndDivisionAboveOrEqual(checkedRank, lowerBound))
+            return false;
+
+        if(!IsNumberAndDivisioBelowOrEqual(checkedRank, upperBound))
+            return false;
+
+        return true;
+    }
+
+    private bool IsRankNameAboveOrEqual(
         QueueRocketLeagueRank checkedRank,
         QueueRocketLeagueRank lowerBound)
-        => checkedRank.RocketLeagueRankName >= lowerBound.RocketLeagueRankName &&
-           checkedRank.RocketLeagueRankNumber >= lowerBound.RocketLeagueRankNumber &&
-           checkedRank.RocketLeagueDivision >= lowerBound.RocketLeagueDivision;
+        => checkedRank.RocketLeagueRankName >= lowerBound.RocketLeagueRankName;
 
-    private bool IsBelowOrEqualUpperBound(
+    private bool IsRankNameBelowOrEqual(
         QueueRocketLeagueRank checkedRank,
         QueueRocketLeagueRank upperBound)
-        => checkedRank.RocketLeagueRankName <= upperBound.RocketLeagueRankName &&
-           checkedRank.RocketLeagueRankNumber <= upperBound.RocketLeagueRankNumber &&
+        => checkedRank.RocketLeagueRankName <= upperBound.RocketLeagueRankName;
+
+    private bool IsNumberAndDivisionAboveOrEqual(
+        QueueRocketLeagueRank checkedRank,
+        QueueRocketLeagueRank lowerBound)
+        => checkedRank.RocketLeagueRankNumber >= lowerBound.RocketLeagueRankNumber &&
+           checkedRank.RocketLeagueDivision >= lowerBound.RocketLeagueDivision;
+
+    private bool IsNumberAndDivisioBelowOrEqual(
+        QueueRocketLeagueRank checkedRank,
+        QueueRocketLeagueRank upperBound)
+        => checkedRank.RocketLeagueRankNumber <= upperBound.RocketLeagueRankNumber &&
            checkedRank.RocketLeagueDivision <= upperBound.RocketLeagueDivision;
 
     private bool Is2VS2WithEnoughMatches(int numberOfMatches, RocketLeagueQueueMode mode)

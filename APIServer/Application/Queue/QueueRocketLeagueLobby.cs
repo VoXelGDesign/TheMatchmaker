@@ -10,22 +10,24 @@ using Domain.Users.User;
 using Contracts.Common;
 using Infrastructure;
 using MediatR;
+using Contracts.QueueContracts;
 
 namespace Application.Queue;
 
 public record QueueRequestCommand(
     string Mode,
     RocketLeagueRankDto lowerBoundRank,
-    RocketLeagueRankDto upperBoundRank) : IRequest;
+    RocketLeagueRankDto upperBoundRank,
+    QueueRegion Region) : IRequest;
 
 internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 {
 
-    private readonly IQueueRequestPublisher _publisher;
+    private readonly IQueueRocketLeagueLobbyRequestPublisher _publisher;
     private readonly ClaimsPrincipal _user;
     private readonly ApplicationDbContext _dbContext;
 
-    public QueueRocketLeagueLobby(IQueueRequestPublisher publisher, ClaimsPrincipal user, ApplicationDbContext dbContext)
+    public QueueRocketLeagueLobby(IQueueRocketLeagueLobbyRequestPublisher publisher, ClaimsPrincipal user, ApplicationDbContext dbContext)
     {
         _publisher = publisher;    
         _dbContext = dbContext;
@@ -42,7 +44,7 @@ internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
         claimidentity = Guid.Parse(id);
         var userId = new UserId(claimidentity);
 
-        var queueRequest = new QueueRocketLeagueLobbyRequest();
+        var queueRequest = new QueueRocketLeagueLobbyRequestDto();
 
         var userRanks = await _dbContext.UserGameRanks.SingleOrDefaultAsync(x => x.UserId == userId);
 
@@ -57,6 +59,7 @@ internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
             
 
         var mode = (RocketLeagueQueueMode)Enum.Parse(typeof(RocketLeagueQueueMode), request.Mode);
+        
 
         if (userRanks is null || queueInfo is null)
             throw new ResourceMissingException();
@@ -86,18 +89,18 @@ internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 
         queueRequest.Mode = mode;
 
-        queueRequest.UserRank = QueueRocketLeagueRank.Create(
+        queueRequest.UserRank = new QueueRocketLeagueRankDto(
             userRank.RocketLeagueRankName.ToString(),
             userRank.RocketLeagueRankNumber.ToString(),
             userRank.RocketLeagueDivision.ToString()
             ) ?? throw new ResourceCreationFailedException();
 
-        var lowerBound = QueueRocketLeagueRank.Create(
+        var lowerBound = new QueueRocketLeagueRankDto(
             request.lowerBoundRank.Name,
             request.lowerBoundRank.Number,
             request.lowerBoundRank.Division);
 
-        var upperBound = QueueRocketLeagueRank.Create(
+        var upperBound = new QueueRocketLeagueRankDto(
             request.upperBoundRank.Name,
             request.upperBoundRank.Number,
             request.upperBoundRank.Division);
@@ -107,6 +110,8 @@ internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 
         queueRequest.LowerBoundRank = lowerBound;
         queueRequest.UpperBoundRank = upperBound;
+
+        queueRequest.Region = request.Region;
 
         await _publisher.PublishAsync(queueRequest);
     }

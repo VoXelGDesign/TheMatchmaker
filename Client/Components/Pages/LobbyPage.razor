@@ -131,8 +131,9 @@
     private Task<AuthenticationState>? AuthState { get; set; }
     RocketLeaguePlayerDto? player1;
     RocketLeaguePlayerDto? player2;
-    RocketLeaguePlayerDto? player3 /* = new RocketLeaguePlayerDto(new UserIdDto("asd-asd-asd"),"Dummy", "https://www.dummylink.com/0-129312-0390123-01923","dummyplayer", false) */;
+    RocketLeaguePlayerDto? player3;
     RocketLeague2vs2LobbyResponse? rocketLeague2Vs2LobbyResponse;
+    RocketLeague3vs3LobbyResponse? rocketLeague3Vs3LobbyResponse;
 
     private int cardSize
     => player3 is null ? player2 is null? 12 : 6 : 4;
@@ -157,12 +158,20 @@
         }
 
         await LobbyManager.UpdateLobbyStatus();
-        rocketLeague2Vs2LobbyResponse = LobbyManager.GetUserLobby();
+        rocketLeague2Vs2LobbyResponse = LobbyManager.GetUser2vs2Lobby();
+        rocketLeague3Vs3LobbyResponse = LobbyManager.GetUser3vs3Lobby();
 
         if (rocketLeague2Vs2LobbyResponse is not null)
         {
             player1 = rocketLeague2Vs2LobbyResponse.Player1;
             player2 = rocketLeague2Vs2LobbyResponse.Player2;
+        }
+
+        if (rocketLeague3Vs3LobbyResponse is not null)
+        {
+            player1 = rocketLeague3Vs3LobbyResponse.Player1;
+            player2 = rocketLeague3Vs3LobbyResponse.Player2;
+            player3 = rocketLeague3Vs3LobbyResponse.Player3;
         }
 
         

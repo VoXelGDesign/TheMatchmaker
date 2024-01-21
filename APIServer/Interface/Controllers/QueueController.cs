@@ -25,7 +25,7 @@ namespace Interface.Controllers
 
         [HttpPost("SendRequest")]
         public async Task RequestQueue([FromBody] QueueRocketLeagueRequest request)
-        => await _mediator.Send(new QueueRequestCommand(request.Mode, request.LowerBound, request.UpperBound));
+        => await _mediator.Send(new QueueRequestCommand(request.Mode, request.LowerBound, request.UpperBound, request.QueueRegion));
 
 
         [HttpGet("Info")]

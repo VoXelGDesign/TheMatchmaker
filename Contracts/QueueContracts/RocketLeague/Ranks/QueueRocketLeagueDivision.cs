@@ -2,10 +2,10 @@
 
 
 public enum QueueRocketLeagueDivision
-{
-    NONE,
+{   
     I,
     II,
     III,
-    IV
+    IV,
+    NONE
 }

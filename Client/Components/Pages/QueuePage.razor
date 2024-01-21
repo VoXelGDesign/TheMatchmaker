@@ -2,12 +2,14 @@
 @attribute [Authorize]
 @inject NavigationManager NavigationManager
 @inject IQueueManager QueueManager
+@inject ISnackbar Snackbar
 @using System.Security.Claims
 @using Client.MyAccount
 @using Client.Queue
 @using Contracts.ApiContracts.Queue.Requests
 @using Contracts.QueueContracts
 @using Contracts.QueueContracts.RocketLeague
+@using Contracts.QueueContracts.RocketLeague.Ranks
 
 <MudGrid>
     <MudItem xs="12" Class="px-10 py-5">
@@ -20,84 +22,95 @@
                         <MudSelectItem Value="@(RocketLeagueQueueMode.TwoVSTwo)">2 vs 2</MudSelectItem>
                         <MudSelectItem Value="@(RocketLeagueQueueMode.ThreeVSThree)">3 vs 3</MudSelectItem>
                     </MudSelect>
-
+                    <MudSelect @bind-Value="region" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        @foreach (QueueRegion item in Enum.GetValues(typeof(QueueRegion)))
+                        {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudText Color="Color.Secondary">Set Lower Bound Rank: </MudText>
-                    <MudSelect @bind-Value="lowerBound.Name" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                        <MudSelectItem Value="@("BRONZE")">Bronze</MudSelectItem>
-                        <MudSelectItem Value="@("SILVER")">Silver</MudSelectItem>
-                        <MudSelectItem Value="@("GOLD")">Gold</MudSelectItem>
-                        <MudSelectItem Value="@("DIAMOND")">Diamond</MudSelectItem>
-                        <MudSelectItem Value="@("CHAMPION")">Champion</MudSelectItem>
-                        <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
-                        <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
+                    <MudSelect @bind-Value="lowerBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        @foreach (QueueRocketLeagueRankName item in Enum.GetValues(typeof(QueueRocketLeagueRankName)))
+                        {
+                            if (upperBound.RocketLeagueRankName >= item)
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        }
                     </MudSelect>
-                    @if (lowerBound.Name != "SUPERSONICLEGEND")
+                    @if (lowerBound.RocketLeagueRankName != QueueRocketLeagueRankName.SUPERSONICLEGEND)
                     {
-                        <MudSelect @bind-Value="lowerBound.Number" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelect @bind-Value="lowerBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
 
-                            <MudSelectItem Value="@("I")">I</MudSelectItem>
-                            <MudSelectItem Value="@("II")">II</MudSelectItem>
-                            <MudSelectItem Value="@("III")">III</MudSelectItem>
+                            @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
+                            {
+                                if (item != QueueRocketLeagueRankNumber.NONE)
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            }
 
                         </MudSelect>
-                        <MudSelect @bind-Value="lowerBound.Division" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelect @bind-Value="lowerBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
 
-                            <MudSelectItem Value="@("I")">I</MudSelectItem>
-                            <MudSelectItem Value="@("II")">II</MudSelectItem>
-                            <MudSelectItem Value="@("III")">III</MudSelectItem>
-                            <MudSelectItem Value="@("IV")">IV</MudSelectItem>
+                            @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
+                            {
+                                if (item != QueueRocketLeagueDivision.NONE)
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            }
 
                         </MudSelect>
                     }
                 </MudItem>
 
-                <MudItem xs="12" md="6">
-                    <MudText Color="Color.Secondary">Set upper bound  rank: </MudText>
-                    <MudSelect @bind-Value="upperBound.Name" Label="Select Your Lower Bound Rank Name"  HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                        <MudSelectItem Value="@("BRONZE")">Bronze</MudSelectItem>
-                        <MudSelectItem Value="@("SILVER")">Silver</MudSelectItem>
-                        <MudSelectItem Value="@("GOLD")">Gold</MudSelectItem>
-                        <MudSelectItem Value="@("DIAMOND")">Diamond</MudSelectItem>
-                        <MudSelectItem Value="@("CHAMPION")">Champion</MudSelectItem>
-                        <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
-                        <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
-                    </MudSelect>
-                    @if (upperBound.Name != "SUPERSONICLEGEND")
-                    {
-                        <MudSelect @bind-Value="upperBound.Number" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                            <MudSelectItem Value="@("I")">I</MudSelectItem>
-                            <MudSelectItem Value="@("II")">II</MudSelectItem>
-                            <MudSelectItem Value="@("III")">III</MudSelectItem>
-
+                @if (lowerBound.RocketLeagueRankName != QueueRocketLeagueRankName.SUPERSONICLEGEND)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Color="Color.Secondary">Set upper bound  rank: </MudText>
+                        <MudSelect @bind-Value="upperBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                            @foreach (QueueRocketLeagueRankName item in Enum.GetValues(typeof(QueueRocketLeagueRankName)))
+                            {
+                                if (lowerBound.RocketLeagueRankName <= item)
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            }
                         </MudSelect>
-                        <MudSelect @bind-Value="upperBound.Division" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                            <MudSelectItem Value="@("I")">I</MudSelectItem>
-                            <MudSelectItem Value="@("II")">II</MudSelectItem>
-                            <MudSelectItem Value="@("III")">III</MudSelectItem>
-                            <MudSelectItem Value="@("IV")">IV</MudSelectItem>
-                        </MudSelect>
-                    }
-                </MudItem>
+                        @if (upperBound.RocketLeagueRankName != QueueRocketLeagueRankName.SUPERSONICLEGEND)
+                        {
+                            <MudSelect @bind-Value="upperBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
 
+                                @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
+                                {
+                                    if(item != QueueRocketLeagueRankNumber.NONE)
+                                    {
+                                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                                    }                                  
+                                }
+
+                            </MudSelect>
+                            <MudSelect @bind-Value="upperBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+
+                                @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
+                                {
+                                    if (item != QueueRocketLeagueDivision.NONE)
+                                    {
+                                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                                    }
+                                }
+
+                            </MudSelect>
+                        }
+                    </MudItem>
+                }
                 <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
 
-                    <MudOverlay Visible="true" Absolute="true">
-                        @if (joinedQueue)
-                        {
-                            <MudButton Variant="Variant.Filled" Disabled="true" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SendQueueRequest">JOINED QUEUE</MudButton>
-                        }
-                        else
-                        {
-                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SendQueueRequest">JOIN QUEUE</MudButton>
-                        }
-
-                    </MudOverlay>
-
-                    <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
-
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="height:60px;width:120px;" OnClick="@SendQueueRequest">JOIN QUEUE</MudButton>
 
                 </MudItem>
 
@@ -112,24 +125,30 @@
     [CascadingParameter]
     private Task<AuthenticationState>? AuthState { get; set; }
 
-    private RocketLeagueRankDto lowerBound = new("BRONZE", "I", "I");
-    private RocketLeagueRankDto upperBound = new("BRONZE", "I", "I");
+    private QueueRegion region { get; set; }
+
+    private QueueRocketLeagueRank lowerBound = new()
+    {
+        RocketLeagueRankName = QueueRocketLeagueRankName.BRONZE,
+        RocketLeagueDivision = QueueRocketLeagueDivision.I,
+        RocketLeagueRankNumber = QueueRocketLeagueRankNumber.I
+    };
+    private QueueRocketLeagueRank upperBound = new()
+        {
+            RocketLeagueRankName = QueueRocketLeagueRankName.SUPERSONICLEGEND
+        };
+
 
     bool joinedQueue = false;
     RocketLeagueQueueMode mode = RocketLeagueQueueMode.TwoVSTwo;
 
-    public int Value { get; set; }
-    bool _disposed;
-    public void Dispose() => _disposed = true;
 
-
-
-    private RocketLeagueRankDto CorrectRank(RocketLeagueRankDto rank)
+    private QueueRocketLeagueRank CorrectRank(QueueRocketLeagueRank rank)
     {
-        if (rank.Name == "SUPERSONICLEGEND")
+        if (rank.RocketLeagueRankName == QueueRocketLeagueRankName.SUPERSONICLEGEND)
         {
-            rank.Number = "NONE";
-            rank.Division = "NONE";
+            rank.RocketLeagueRankNumber = QueueRocketLeagueRankNumber.NONE;
+            rank.RocketLeagueDivision = QueueRocketLeagueDivision.NONE;
         }
 
         return rank;
@@ -137,56 +156,55 @@
 
     private async void SendQueueRequest()
     {
-        if (joinedQueue)
-            return;
+
+        if (lowerBound.RocketLeagueRankName == QueueRocketLeagueRankName.SUPERSONICLEGEND)
+        {
+            upperBound.RocketLeagueRankName = QueueRocketLeagueRankName.SUPERSONICLEGEND;
+        }
+
+        lowerBound = CorrectRank(lowerBound);
+        upperBound = CorrectRank(upperBound);
+
+        var lowerDto = new RocketLeagueRankDto(
+            lowerBound.RocketLeagueRankName.ToString(),
+            lowerBound.RocketLeagueRankNumber.ToString(),
+            lowerBound.RocketLeagueDivision.ToString());
+
+        var upperDto = new RocketLeagueRankDto(
+                    upperBound.RocketLeagueRankName.ToString(),
+                    upperBound.RocketLeagueRankNumber.ToString(),
+                    upperBound.RocketLeagueDivision.ToString());
 
         var request = new QueueRocketLeagueRequest
             {
                 Mode = mode.ToString(),
-                LowerBound = CorrectRank(lowerBound),
-                UpperBound = CorrectRank(upperBound)
+                LowerBound = lowerDto,
+                UpperBound = upperDto,
+                QueueRegion = region
             };
 
 
         var resultSuccesful = await QueueManager.JoinQueue(request);
 
-        if (resultSuccesful)
-        {
-            LunchLoading();
-            joinedQueue = true;
-        }
-
+        if (!resultSuccesful)
+            Snackbar.Add("Cannot join queue! Check if sesecary account info is provided.", MudBlazor.Severity.Error);
     }
 
 
-
-    public async void LunchLoading()
-    {
-        Value = 1;
-        do
-        {
-            if (_disposed) return;
-
-            Value += 1;
-            StateHasChanged();
-            await Task.Delay(200);
-
-        } while (Value < 100);
-
-        LunchLoading();
-    }
 
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
 
+        QueueManager.UpdateQueueStatus();
+
         if (!authState.User.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/");
         }
 
-        if(QueueManager.queueStatus == QueueStatus.JoinedQueue)
+        if (QueueManager.queueStatus == QueueStatus.JoinedQueue)
         {
             NavigationManager.NavigateTo("/queue-waiting");
         }

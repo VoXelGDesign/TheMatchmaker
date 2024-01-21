@@ -10,6 +10,7 @@
 @using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Requests
 @using Contracts.ApiContracts.UserGameRanks.RocketLeagueRank.Responses
 @using Contracts.QueueContracts.RocketLeague
+@using Contracts.QueueContracts.RocketLeague.Ranks
 
 <PageTitle>My Account</PageTitle>
 <MudGrid>
@@ -20,15 +21,15 @@
             </MudStack>
             <MudGrid>
 
-                @if (myAccount is not null)
+                @if (myAccount is not null && myAccount.Name is not null)
                 {
                     <MudItem xs="12" sm="3" Class="d-flex align-center justify-center flex-grow-1 gap-4">
-                        <MudAvatar Style="width: 100px; height: 100px;" Color="Color.Primary"><MudText Class="mt-2" Typo="Typo.h2" Color="Color.Dark"><b>@myAccount.Name[0].ToString()</b></MudText></MudAvatar>
+                        <MudAvatar Style="width: 100px; height: 100px;" Color="Color.Primary"><MudText Class="mt-2" Typo="Typo.h2" Color="Color.Dark"><b>@myAccount?.Name[0].ToString()</b></MudText></MudAvatar>
                     </MudItem>
                     <MudItem xs="12" sm="9">
-                        <MudText Typo="Typo.h3"><b>@myAccount.Name</b></MudText>
-                        <MudText Typo="Typo.body2"><b>@myAccount.DiscordName</b></MudText>
-                        <MudText Color="Color.Primary" Typo="Typo.body2"><b>@myAccount.SteamProfileLink</b></MudText>
+                        <MudText Typo="Typo.h3"><b>@myAccount?.Name</b></MudText>
+                        <MudText Typo="Typo.body2"><b>@myAccount?.DiscordName</b></MudText>
+                        <MudText Color="Color.Primary" Typo="Typo.body2"><b>@myAccount?.SteamProfileLink</b></MudText>
                     </MudItem>
 
                 }
@@ -37,7 +38,6 @@
                     <MudItem xs="12" Class="d-flex align-center justify-center flex-grow-1 gap-4">
                         <MudText Align="Align.Center">There is no infromation provided about account. Please insert information below.</MudText>
                     </MudItem>
-
                 }
 
             </MudGrid>
@@ -175,21 +175,20 @@
                     <MudSelectItem Value="@("GRANDCHAMPION")">Grand champion</MudSelectItem>
                     <MudSelectItem Value="@("SUPERSONICLEGEND")">Supersonic Legend</MudSelectItem>
                 </MudSelect>
-
+                @if (updateRocketLeagueRankRequest.Name != "SUPERSONICLEGEND")
+                {
                 <MudSelect @bind-Value="updateRocketLeagueRankRequest.Number" Label="Select Your Rank Number" HelperText="ex. I" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                    <MudSelectItem Value="@("NONE")">...</MudSelectItem>
                     <MudSelectItem Value="@("I")">I</MudSelectItem>
                     <MudSelectItem Value="@("II")">II</MudSelectItem>
                     <MudSelectItem Value="@("III")">III</MudSelectItem>
                 </MudSelect>
-                <MudSelect @bind-Value="updateRocketLeagueRankRequest.Division" Label="Select Your Division" HelperText="ex. IV" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
-                    <MudSelectItem Value="@("NONE")">-...</MudSelectItem>
+                <MudSelect @bind-Value="updateRocketLeagueRankRequest.Division" Label="Select Your Division" HelperText="ex. IV" Placeholder="Please Select Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">   
                     <MudSelectItem Value="@("I")">I</MudSelectItem>
                     <MudSelectItem Value="@("II")">II</MudSelectItem>
                     <MudSelectItem Value="@("III")">III</MudSelectItem>
                     <MudSelectItem Value="@("IV")">IV</MudSelectItem>
                 </MudSelect>
-
+                }
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" OnClick="@(async () => await UpdateRocketLeagueRank())">UPDATE</MudButton>
                 </MudCardActions>
@@ -265,7 +264,7 @@
         myAccount = new GetUserAccountInfoResponse(
             updateAccountResponse.Name,
             updateAccountResponse.SteamProfileLink,
-            updateAccountRequest.DiscordName
+            updateAccountResponse.DiscordName
         );
 
         updateAccountRequest = new();
@@ -289,6 +288,12 @@
 
     private async Task UpdateRocketLeagueRank()
     {
+        if (updateRocketLeagueRankRequest.Name == "SUPERSONICLEGEND")
+        {
+            updateRocketLeagueRankRequest.Number = "NONE";
+            updateRocketLeagueRankRequest.Division = "NONE";
+        }
+
         var response = await MyAccount.UpdateRocketLeagueRank(updateRocketLeagueRankRequest);
 
         if (response is null)
@@ -304,6 +309,11 @@
                 getRocketLeagueRankResponse.Rank3vs3 = newRank;
                 break;
         }
+
+        if (updateRocketLeagueRankRequest.Number == "NONE")
+            updateRocketLeagueRankRequest.Number = "I";
+        if (updateRocketLeagueRankRequest.Division == "NONE")
+            updateRocketLeagueRankRequest.Division = "I";
 
         UpdateSelection();
 

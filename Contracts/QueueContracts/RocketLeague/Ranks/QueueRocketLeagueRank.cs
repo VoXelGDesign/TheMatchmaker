@@ -2,14 +2,14 @@
 
 public sealed record QueueRocketLeagueRank
 {
-    public QueueRocketLeagueRankName RocketLeagueRankName { get; private set; }
+    public QueueRocketLeagueRankName RocketLeagueRankName { get; set; }
 
-    public QueueRocketLeagueRankNumber RocketLeagueRankNumber { get; private set; }
+    public QueueRocketLeagueRankNumber RocketLeagueRankNumber { get; set; }
 
-    public QueueRocketLeagueDivision RocketLeagueDivision { get; private set; }
+    public QueueRocketLeagueDivision RocketLeagueDivision { get; set; }
 
 
-    public static QueueRocketLeagueRank? Create(string name, string number, string division)
+    public static QueueRocketLeagueRank? Create(QueueRocketLeagueRankDto queueRocketLeagueRankDto)
     {
         QueueRocketLeagueRankName? parsedName = null;
         QueueRocketLeagueRankNumber? parsedNumber = null;
@@ -19,15 +19,15 @@ public sealed record QueueRocketLeagueRank
         {
             parsedName = (QueueRocketLeagueRankName)Enum.Parse(
                 typeof(QueueRocketLeagueRankName),
-                name);
+                queueRocketLeagueRankDto.RocketLeagueRankName);
 
             parsedNumber = (QueueRocketLeagueRankNumber)Enum.Parse(
                 typeof(QueueRocketLeagueRankNumber),
-                number);
+                queueRocketLeagueRankDto.RocketLeagueRankNumber);
 
             parsedDivision = (QueueRocketLeagueDivision)Enum.Parse(
                 typeof(QueueRocketLeagueDivision),
-                division);
+                queueRocketLeagueRankDto.RocketLeagueDivision);
         }
         catch 
         {
@@ -50,7 +50,7 @@ public sealed record QueueRocketLeagueRank
         };
     }
 
-    public static bool IsInvalidCombination(
+    private static bool IsInvalidCombination(
         QueueRocketLeagueRankName name,
         QueueRocketLeagueRankNumber rankNumber,
         QueueRocketLeagueDivision division)

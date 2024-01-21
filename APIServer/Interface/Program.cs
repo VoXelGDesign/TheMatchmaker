@@ -77,11 +77,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 // End Swagger
 
-builder.Services.AddScoped<IQueueRequestPublisher, QueueRequestPublisher>();
+builder.Services.AddScoped<IQueueRocketLeagueLobbyRequestPublisher, QueueRocketLeagueLobbyRequestPublisher>();
 builder.Services.AddScoped<IQueueStatusChangedPublisher, QueueStatusChangedPublisher>();
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumers(Assembly.GetAssembly(typeof(Infrastructure.Publishers.QueueRequestPublisher)));
+    x.AddConsumers(Assembly.GetAssembly(typeof(Infrastructure.Publishers.QueueRocketLeagueLobbyRequestPublisher)));
     x.SetKebabCaseEndpointNameFormatter();
     x.UsingAzureServiceBus((context, cfg) =>
     {
@@ -90,7 +90,7 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddHostedService<RemoveOutdatedLobby>();
+builder.Services.AddHostedService<RemoveOutdatedEntities>();
 
 var app = builder.Build();
 

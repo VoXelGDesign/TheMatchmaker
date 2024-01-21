@@ -21,6 +21,7 @@ namespace Client.MyAccount
         public async Task<GetUserAccountInfoResponse?> GetUserAccountInfo()
         {
             var result = await _httpClient.GetAsync("api/UserAccount");
+            if (!result.IsSuccessStatusCode) return null;
             var accountInfo = await result.Content.ReadFromJsonAsync<GetUserAccountInfoResponse>();
             return accountInfo;
         }
