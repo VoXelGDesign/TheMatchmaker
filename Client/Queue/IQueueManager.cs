@@ -9,4 +9,5 @@ public interface IQueueManager
     public DateTime? JoinedQueueDate { get;}
     public Task UpdateQueueStatus();
     public Task<bool> JoinQueue(QueueRocketLeagueRequest request);
+    public Task LeaveQueue();
 }

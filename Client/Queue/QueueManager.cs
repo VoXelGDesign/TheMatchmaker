@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 
 namespace Client.Queue;
 
-public class QueueManager : IQueueManager
+public class QueueManager : IQueueManager, IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly ISnackbar _snackbar;
@@ -28,10 +28,18 @@ public class QueueManager : IQueueManager
 
     public async Task<bool> JoinQueue(QueueRocketLeagueRequest request)
     {
+        if (_status != QueueStatus.LeftQueue) return false;
+
         var response = await _httpClient.PostAsJsonAsync("api/Queue/SendRequest", request);
         return response.IsSuccessStatusCode;
     }
-    
+
+    public async Task LeaveQueue()
+    {
+        if (_status != QueueStatus.JoinedQueue) return;
+        await _httpClient.DeleteAsync("api/Queue");      
+    }    
+
     public async Task UpdateQueueStatus()
     {        
         var result = await _httpClient.GetAsync("api/Queue/Info");
@@ -65,8 +73,9 @@ public class QueueManager : IQueueManager
         
     }
 
-    
-
-    
-    
+    public void Dispose()
+    {
+        _status = QueueStatus.LeftQueue;
+        JoinedQueueDate = null;
+    }
 }
