@@ -1,6 +1,4 @@
-using Application.Interfaces;
 using Application.Middleware;
-using Azure.Messaging;
 using Infrastructure;
 using Infrastructure.BackgroundTasks;
 using Infrastructure.Publishers;
@@ -10,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +76,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IQueueRocketLeagueLobbyRequestPublisher, QueueRocketLeagueLobbyRequestPublisher>();
 builder.Services.AddScoped<IQueueStatusChangedPublisher, QueueStatusChangedPublisher>();
+builder.Services.AddScoped<IDeleteRocketLeagueQueueRequestPublisher, DeleteRocketLeagueQueueRequestPublisher>();
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumers(Assembly.GetAssembly(typeof(Infrastructure.Publishers.QueueRocketLeagueLobbyRequestPublisher)));

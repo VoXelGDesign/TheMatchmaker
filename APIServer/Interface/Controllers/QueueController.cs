@@ -31,5 +31,9 @@ namespace Interface.Controllers
         [HttpGet("Info")]
         public async Task<ActionResult<UserQueueInfoStatus>> GetRocketLeagueRank()
         => await _mediator.Send(new GetUserQueueInfoQuery());
+
+        [HttpDelete]
+        public async Task DeleteRocketLeagueQueueRequest()
+        => await _mediator.Send(new LeaveRocketLeagueQueueRequestCommand());
     }
 }

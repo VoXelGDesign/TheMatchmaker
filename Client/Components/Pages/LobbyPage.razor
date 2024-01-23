@@ -13,14 +13,23 @@
 @using Contracts.LobbyContracts
 @using Contracts.QueueContracts
 @using Contracts.QueueContracts.RocketLeague
+<MudCard Elevation="10" Class=" pa-5 mt-10 mx-5 rounded-xl">
 <MudGrid>
-    <MudItem xxl="12" lg="@cardSize" Class="pa-10">
-        @if (secondsLeft >= 0 || minutesLeft >= 0)
+    @if (secondsLeft > 0 || minutesLeft > 0)
         {
-            <MudText>LOBBY DURATION TIME: @minutesLeft MINUTES @secondsLeft SECONDS </MudText>
-        }
+    <MudItem xs="12" Class="pt-10 d-flex justify-center flex-grow-1 gap-4">
+        
+            <MudText Typo="Typo.h2"><b>LOBBY DURATION TIME:</b></MudText>
+        
     </MudItem>
+    <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
+        
+            <MudText Color="Color.Primary" Typo="Typo.h3"><b>@minutesLeft MINUTES @secondsLeft SECONDS </b></MudText>
+        
+    </MudItem>
+    }
 </MudGrid>
+</MudCard>
 <MudGrid>   
     @if (player1 is not null)
     {
