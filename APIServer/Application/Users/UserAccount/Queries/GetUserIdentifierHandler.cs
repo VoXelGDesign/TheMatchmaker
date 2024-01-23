@@ -7,10 +7,10 @@ namespace Application.Users.UserAccount.Queries;
 
 public record GetUserIdentifierQuery() : IRequest<UserIdDto>;
 
-internal class GetUserIdentifier : IRequestHandler<GetUserIdentifierQuery, UserIdDto>
+internal class GetUserIdentifierHandler : IRequestHandler<GetUserIdentifierQuery, UserIdDto>
 {
     private readonly ClaimsPrincipal _user;
-    public GetUserIdentifier(ClaimsPrincipal user)
+    public GetUserIdentifierHandler(ClaimsPrincipal user)
     {
         _user = user;
     }
