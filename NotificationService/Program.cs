@@ -52,32 +52,6 @@ app.UseHttpsRedirection();
 
 app.MapHub<NotificationHub>("notyfications");
 
-app.MapPost("/notifyClientJoinedQueue", (string userGuid, NotificationHub hub) =>
-{
-    var userId = new UserIdDto(userGuid);
-    hub.NotifyUserJoinedQueue(userId);
-    return;
-})
-.WithName("NotifyClientJoinedQueue")
-.WithOpenApi();
-
-app.MapPost("/notifyClientLeftQueue", (string userGuid, NotificationHub hub) =>
-{
-    var userId = new UserIdDto(userGuid);
-    hub.NotifyUserLeftQueue(userId);
-    return;
-})
-.WithName("NotifyClientLeftQueue")
-.WithOpenApi();
-
-app.MapPost("/notifyClientJoinedLobby", (string userGuid, NotificationHub hub) =>
-{
-    var userId = new UserIdDto(userGuid);
-    hub.NotifyUserJoinedLobby(userId);
-    return;
-})
-.WithName("NotifyClientJoinedLobby")
-.WithOpenApi();
 
 app.UseCors("AllowMyOrigin");
 
