@@ -1,10 +1,9 @@
-﻿namespace Application.Exceptions.CustomExceptions
+﻿namespace Application.Exceptions.CustomExceptions;
+
+public sealed class IdClaimNotFoundException : BaseApplicationException
 {
-    internal sealed class IdClaimNotFoundException : BaseApplicationException
+    internal IdClaimNotFoundException() 
+        : base(ApplicationExceptionCodes.ID_CLAIM_NOT_FOUND())
     {
-        internal IdClaimNotFoundException() 
-            : base(ApplicationExceptionCodes.ID_CLAIM_NOT_FOUND())
-        {
-        }
     }
 }

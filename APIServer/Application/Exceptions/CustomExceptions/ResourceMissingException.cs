@@ -1,10 +1,9 @@
-﻿namespace Application.Exceptions.CustomExceptions
+﻿namespace Application.Exceptions.CustomExceptions;
+
+public sealed class ResourceMissingException : BaseApplicationException
 {
-    internal sealed class ResourceMissingException : BaseApplicationException
+    internal ResourceMissingException()
+        : base(ApplicationExceptionCodes.RESOURCE_MISSING())
     {
-        internal ResourceMissingException()
-            : base(ApplicationExceptionCodes.RESOURCE_MISSING())
-        {
-        }
     }
 }

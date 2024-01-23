@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Exceptions
+﻿namespace Application.Exceptions
 {
-    internal class ApplicationExceptionCodes
+    public class ApplicationExceptionCodes
     {
         internal static string ID_CLAIM_NOT_FOUND()
             => nameof(ID_CLAIM_NOT_FOUND);
