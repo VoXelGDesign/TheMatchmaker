@@ -1,7 +1,7 @@
 ﻿using Contracts.QueueContracts.RocketLeague;
 
 
-namespace Application.Interfaces;
+namespace Infrastructure.Publishers;
 public interface IQueueRocketLeagueLobbyRequestPublisher
 {
     public Task PublishAsync(QueueRocketLeagueLobbyRequestDto request);

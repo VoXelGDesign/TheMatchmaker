@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using Application.Interfaces;
 using Contracts.QueueContracts.RocketLeague;
 
 namespace Infrastructure.Publishers;

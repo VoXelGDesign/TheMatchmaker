@@ -1,9 +1,6 @@
-﻿
-using Contracts.QueueContracts;
-using Contracts.QueueContracts.RocketLeague;
+﻿using Contracts.QueueContracts;
 
 namespace Infrastructure.Publishers;
-
 
 public interface IQueueStatusChangedPublisher
 {
