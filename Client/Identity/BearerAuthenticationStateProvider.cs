@@ -7,9 +7,9 @@ using Blazored.LocalStorage;
 using MudBlazor;
 using Client.Notifications;
 using Contracts.Common;
-using Contracts.ApiContracts.Queue.Responses;
 using Client.Queue;
-using Contracts.QueueContracts;
+using Client.Lobby;
+using Microsoft.AspNetCore.Components;
 
 
 
@@ -38,17 +38,37 @@ namespace Client.Identity
         private readonly IQueueManager _queueManager;
 
         private readonly ISnackbar _snackbar;
+
+        private readonly IRocketLeagueLobbyManager _rocketLeagueLobbyManager;
+        private readonly NavigationManager _navigationManager;
+
+        private List<IDisposable> _disposables = new List<IDisposable>();
         
 
 
-        public BearerAuthenticationStateProvider(IHttpClientFactory httpClientFactory, ILocalStorageService localStorage, ISnackbar snackbar, INotificationManager notificationManager, IQueueManager queueManager)
+        public BearerAuthenticationStateProvider(
+            IHttpClientFactory httpClientFactory,
+            ILocalStorageService localStorage,
+            ISnackbar snackbar,
+            INotificationManager notificationManager,
+            IQueueManager queueManager,
+            IRocketLeagueLobbyManager rocketLeagueLobbyManager,
+            NavigationManager navigationManager)
         {
             _httpClient = httpClientFactory.CreateClient("Auth");
             _localStorage = localStorage;
             _snackbar = snackbar;
             _notificationManager = notificationManager;
             _queueManager = queueManager;
-    }
+            _rocketLeagueLobbyManager = rocketLeagueLobbyManager;
+            _navigationManager = navigationManager;
+
+            if (_queueManager is IDisposable disposableQueue)
+                _disposables.Add(disposableQueue);
+
+            if(_rocketLeagueLobbyManager is IDisposable disposableLobby)
+                _disposables.Add(disposableLobby);
+        }
 
         public async Task<FormResult> RegisterAsync(string email, string password)
         {
@@ -220,6 +240,8 @@ namespace Client.Identity
             await _localStorage.RemoveItemAsync("ExpiresIn");
             await _localStorage.RemoveItemAsync("RefreshToken");
             await _notificationManager.DisconnectFromNotificationService();
+            _disposables.ForEach(disposable => disposable.Dispose());
+            _navigationManager.NavigateTo("/");
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 

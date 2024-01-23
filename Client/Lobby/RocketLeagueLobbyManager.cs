@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace Client.Lobby
 {
-    public class RocketLeagueLobbyManager : IRocketLeagueLobbyManager
+    public class RocketLeagueLobbyManager : IRocketLeagueLobbyManager, IDisposable
     {
         private RocketLeague2vs2LobbyResponse? _response2vs2;
 
@@ -53,6 +53,10 @@ namespace Client.Lobby
 
         }
 
-        
+        public void Dispose()
+        {
+            _response2vs2 = null;
+            _response3vs3 = null;
+        }
     }
 }
