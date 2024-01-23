@@ -3,6 +3,7 @@ using Contracts.QueueContracts.RocketLeague;
 using Domain.Games.RocketLeague.Lobbies;
 using Domain.Games.RocketLeague.Players;
 using Domain.Users.User;
+using Infrastructure.Exceptions.CustomExceptions;
 using Infrastructure.Publishers;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +58,7 @@ namespace Infrastructure.Consumers
             }
 
             if (firstQueueInfo is null || secondQueueInfo is null)
-                throw new Exception("INTERFACE_INCOSISTENCY_IN_DATABASE");
+                throw new InconsistencyInDatabaseException();
 
             var player1 = RocketLeaguePlayer.Create(firstUserAccount);
             var player2 = RocketLeaguePlayer.Create(secondUserAccount);
@@ -91,7 +92,7 @@ namespace Infrastructure.Consumers
                         .FirstOrDefaultAsync(x => x.UserId == thirdUserId);
 
                     if (thirdQueueInfo is null)
-                        throw new Exception("INTERFACE_INCOSISTENCY_IN_DATABASE");
+                        throw new InconsistencyInDatabaseException();
 
                     if (thirdUserAccount is null)
                     {
