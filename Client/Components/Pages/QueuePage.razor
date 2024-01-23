@@ -22,7 +22,7 @@
                         <MudSelectItem Value="@(RocketLeagueQueueMode.TwoVSTwo)">2 vs 2</MudSelectItem>
                         <MudSelectItem Value="@(RocketLeagueQueueMode.ThreeVSThree)">3 vs 3</MudSelectItem>
                     </MudSelect>
-                    <MudSelect @bind-Value="region" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                    <MudSelect @bind-Value="region" Label="Select Your Language" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
                         @foreach (QueueRegion item in Enum.GetValues(typeof(QueueRegion)))
                         {
                                 <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -47,7 +47,7 @@
 
                             @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
                             {
-                                if (item != QueueRocketLeagueRankNumber.NONE)
+                                if (item != QueueRocketLeagueRankNumber.NONE && (upperBound.RocketLeagueRankNumber >= item || upperBound.RocketLeagueRankName > lowerBound.RocketLeagueRankName))
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
                                 }
@@ -58,7 +58,7 @@
 
                             @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
                             {
-                                if (item != QueueRocketLeagueDivision.NONE)
+                                if (item != QueueRocketLeagueDivision.NONE && (upperBound.RocketLeagueDivision >= item || upperBound.RocketLeagueRankName > lowerBound.RocketLeagueRankName))
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
                                 }
@@ -87,7 +87,7 @@
 
                                 @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
                                 {
-                                    if(item != QueueRocketLeagueRankNumber.NONE)
+                                    if (item != QueueRocketLeagueRankNumber.NONE && (lowerBound.RocketLeagueRankNumber <= item || upperBound.RocketLeagueRankName < lowerBound.RocketLeagueRankName))
                                     {
                                         <MudSelectItem Value="@item">@item</MudSelectItem>
                                     }                                  
@@ -98,7 +98,7 @@
 
                                 @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
                                 {
-                                    if (item != QueueRocketLeagueDivision.NONE)
+                                    if (item != QueueRocketLeagueDivision.NONE && (lowerBound.RocketLeagueDivision <= item || upperBound.RocketLeagueRankName < lowerBound.RocketLeagueRankName))
                                     {
                                         <MudSelectItem Value="@item">@item</MudSelectItem>
                                     }
