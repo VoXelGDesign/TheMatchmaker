@@ -4,13 +4,14 @@ using Contracts.QueueContracts.RocketLeague;
 using Domain.Games.RocketLeague.Ranks;
 using Microsoft.EntityFrameworkCore;
 using Domain.Users.UserQueueInfos;
-using Application.Interfaces;
+using Infrastructure.Publishers;
+using Contracts.QueueContracts;
 using System.Security.Claims;
 using Domain.Users.User;
 using Contracts.Common;
 using Infrastructure;
 using MediatR;
-using Contracts.QueueContracts;
+
 
 namespace Application.Queue;
 
@@ -20,7 +21,7 @@ public record QueueRequestCommand(
     RocketLeagueRankDto upperBoundRank,
     QueueRegion Region) : IRequest;
 
-internal class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
+public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 {
 
     private readonly IQueueRocketLeagueLobbyRequestPublisher _publisher;
