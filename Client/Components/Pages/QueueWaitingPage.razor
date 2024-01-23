@@ -13,20 +13,27 @@
     <MudItem xs="12" Class="px-10 py-5">
         <MudCard Elevation="10" Class="mx-auto pa-10 px-3 mt-10 rounded-xl ">
             <MudGrid>
-                <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;"><MudText Typo="Typo.h2"><b>WAITING IN QUEUE</b></MudText></MudItem>
-             
+
                 <MudItem xs="12" Class="d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
-                                        
-                    <MudOverlay Visible="true" Absolute="true">                                             
-                        <MudText Typo="Typo.h5" ><b>TIMES OUT IN: </b></MudText>
-                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@minutesLeft MINUTES @secondsLeft SECONDS</b></p></MudText>
-                        </MudOverlay>
-
-                    <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
-
-
+                    <MudText Typo="Typo.h2"><b>WAITING IN QUEUE</b></MudText>
                 </MudItem>
 
+                <MudItem xs="12" Class="mt-16 d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
+                    <MudOverlay Visible="true" Absolute="true">
+                        <MudText Typo="Typo.h5"><b>TIMES OUT IN: </b></MudText>
+                        <MudText Typo="Typo.button" Color="Color.Secondary"><p><b>@minutesLeft MINUTES @secondsLeft SECONDS</b></p></MudText>
+                    </MudOverlay>
+
+                    <MudProgressCircular Color="Color.Secondary" Value="@Value" Style="height:300px;width:300px;" />
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-16 d-flex justify-center flex-grow-1 gap-4 " Style="position: relative;">
+                    
+                    @if(secondsLeft > 0 || minutesLeft > 0)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Style="height:60px;width:240px;" OnClick="@LeaveQueue">LEAVE QUEUE</MudButton>
+                    }                  
+                </MudItem>
             </MudGrid>
         </MudCard>
     </MudItem>
@@ -44,7 +51,7 @@
     int minutesLeft = 0;
 
     private void UpdateMinutesLeft()
-    {      
+    {
         if (QueueManager.JoinedQueueDate is not null)
         {
             var joinedDate = QueueManager.JoinedQueueDate.Value;
@@ -69,14 +76,14 @@
     }
 
     private async void UpdateTime()
-    { 
+    {
         while (QueueManager.JoinedQueueDate is not null)
         {
             await Task.Delay(1000);
             UpdateMinutesLeft();
             UpdateSecondsLeft();
         }
-        
+
     }
 
     public async void LunchLoading()
@@ -93,7 +100,10 @@
         LunchLoading();
     }
 
-
+    private async void LeaveQueue()
+    {
+        await QueueManager.LeaveQueue();
+    }
 
 
     protected override async Task OnInitializedAsync()
