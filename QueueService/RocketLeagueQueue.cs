@@ -56,8 +56,7 @@ public class RocketLeagueQueue : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(30, stoppingToken);
-            Console.WriteLine(QueueRequests.Count);
+            await Task.Delay(30, stoppingToken);           
 
             if (QueueRequests.Count < 1)
                 continue;
