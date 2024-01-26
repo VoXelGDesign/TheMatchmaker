@@ -16,13 +16,13 @@ namespace Application.Users.UserGameRanks.RocketLeague.Commands;
 
 public record UpdateRocketLeagueRankCommand(UpdateRocketLeagueRankRequest dto) : IRequest<UpdateRocketLeagueRankResponse>;
 
-public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateRocketLeagueRankCommand, UpdateRocketLeagueRankResponse>
+public class UpdateRocketLeagueRankHandler : IRequestHandler<UpdateRocketLeagueRankCommand, UpdateRocketLeagueRankResponse>
 {
 
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
 
-    public UpdateUserAccountInfoHandler(ApplicationDbContext applicationDbContext, ClaimsPrincipal user)
+    public UpdateRocketLeagueRankHandler(ApplicationDbContext applicationDbContext, ClaimsPrincipal user)
     {
         _applicationDbContext = applicationDbContext;
         _user = user;

@@ -7,7 +7,7 @@ namespace NotyficationService
 
     public class NotificationHub : Hub<INotificationClient>
     {
-        internal Dictionary<UserIdDto, ConnectionId> RegisteredClients { get; private set; } = new Dictionary<UserIdDto, ConnectionId>();
+        public Dictionary<UserIdDto, ConnectionId> RegisteredClients { get; private set; } = new Dictionary<UserIdDto, ConnectionId>();
 
         public void RegisterClient(string idValue)
         {
@@ -16,21 +16,21 @@ namespace NotyficationService
             RegisteredClients.Add(userId, connectionId);
         }
 
-        internal void NotifyUserJoinedLobby(UserIdDto userId)
+        public void NotifyUserJoinedLobby(UserIdDto userId)
         {
             var connectionId = RegisteredClients.GetValueOrDefault(userId);
             if (connectionId is not null)
                 Clients.Client(connectionId.value).RecieveJoinedLobbyNotyfication();
         }
 
-        internal void NotifyUserJoinedQueue(UserIdDto userId)
+        public void NotifyUserJoinedQueue(UserIdDto userId)
         {
             var connectionId = RegisteredClients.GetValueOrDefault(userId);
             if (connectionId is not null)
                 Clients.Client(connectionId.value).RecieveJoinedQueueNotification();
         }
 
-        internal void NotifyUserLeftQueue(UserIdDto userId)
+        public void NotifyUserLeftQueue(UserIdDto userId)
         {
             var connectionId = RegisteredClients.GetValueOrDefault(userId);
             if (connectionId is not null)
@@ -49,7 +49,7 @@ namespace NotyficationService
         }
     }
 
-    internal record ConnectionId(string value);
+    public record ConnectionId(string value);
 
 
     public interface INotificationClient

@@ -13,11 +13,11 @@ namespace Application.Users.UserGameRanks.RocketLeague.Queries;
 public record GetUserRocketLeagueRankCommand() : IRequest<GetRocketLeagueRankResponse>;
 
 
-public class GetUserAccountInfoHandler : IRequestHandler<GetUserRocketLeagueRankCommand, GetRocketLeagueRankResponse>
+public class GetRocketLeagueRank : IRequestHandler<GetUserRocketLeagueRankCommand, GetRocketLeagueRankResponse>
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
-    public GetUserAccountInfoHandler(ApplicationDbContext applicationDbContext, ClaimsPrincipal user)
+    public GetRocketLeagueRank(ApplicationDbContext applicationDbContext, ClaimsPrincipal user)
     {
         _applicationDbContext = applicationDbContext;
         _user = user;

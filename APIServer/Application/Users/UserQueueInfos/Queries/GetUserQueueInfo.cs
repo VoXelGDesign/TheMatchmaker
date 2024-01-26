@@ -11,7 +11,7 @@ using Contracts.QueueContracts;
 namespace Application.Users.UserQueueInfos.Queries;
 
 public record GetUserQueueInfoQuery() : IRequest<UserQueueInfoStatus>;
-internal class GetUserQueueInfo : IRequestHandler<GetUserQueueInfoQuery, UserQueueInfoStatus>
+public class GetUserQueueInfo : IRequestHandler<GetUserQueueInfoQuery, UserQueueInfoStatus>
 {
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly ClaimsPrincipal _user;
