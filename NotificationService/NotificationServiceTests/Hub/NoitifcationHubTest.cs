@@ -1,4 +1,5 @@
-﻿using Contracts.Common;
+﻿
+using Contracts.Common;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using NotyficationService;
@@ -28,7 +29,7 @@ public class NoitifcationHubTest
 
 
         hub.RegisterClient(userId.UserId);
-      
+
         Assert.Single(hub.RegisteredClients);
     }
 
@@ -54,7 +55,6 @@ public class NoitifcationHubTest
         hub.RegisterClient(userId.UserId);
         hub.NotifyUserJoinedLobby(userId);
 
-        // Assert
         signals.Verify(client => client.RecieveJoinedLobbyNotyfication(), Times.Once);
     }
 
@@ -77,10 +77,9 @@ public class NoitifcationHubTest
         context.Setup(context => context.ConnectionId).Returns(connectionId.value);
 
 
-        hub.RegisterClient(userId.UserId);        
+        hub.RegisterClient(userId.UserId);
         hub.NotifyUserJoinedQueue(userId);
 
-        // Assert
         signals.Verify(client => client.RecieveJoinedQueueNotification(), Times.Once);
     }
 
@@ -98,12 +97,12 @@ public class NoitifcationHubTest
         hub.Clients = clients.Object;
         hub.Context = context.Object;
 
-        
+
         clients.Setup(hub => hub.Client(It.IsAny<string>())).Returns(signals.Object);
         signals.Setup(hub => hub.RecieveLeftQueueNotification()).Verifiable();
         context.Setup(context => context.ConnectionId).Returns(connectionId.value);
 
-        
+
         hub.RegisterClient(userId.UserId);
         hub.NotifyUserLeftQueue(userId);
 
@@ -132,7 +131,7 @@ public class NoitifcationHubTest
 
         hub.RegisterClient(userId.UserId);
         await hub.OnDisconnectedAsync(new Exception());
-        
+
         Assert.Empty(hub.RegisteredClients);
     }
 }

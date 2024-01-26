@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "Noti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "..\Contracts\Contracts.csproj", "{8DB80B37-2DEB-4581-B0B6-F75A86201CBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationServiceTests", "..\NotificationServiceTests\NotificationServiceTests.csproj", "{28A687F0-EE1D-413E-80C3-602E154096A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationServiceTests", "NotificationServiceTests\NotificationServiceTests.csproj", "{63703749-F83E-4DB8-932C-8F5E07940E8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{8DB80B37-2DEB-4581-B0B6-F75A86201CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DB80B37-2DEB-4581-B0B6-F75A86201CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DB80B37-2DEB-4581-B0B6-F75A86201CBC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28A687F0-EE1D-413E-80C3-602E154096A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28A687F0-EE1D-413E-80C3-602E154096A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28A687F0-EE1D-413E-80C3-602E154096A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28A687F0-EE1D-413E-80C3-602E154096A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63703749-F83E-4DB8-932C-8F5E07940E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63703749-F83E-4DB8-932C-8F5E07940E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63703749-F83E-4DB8-932C-8F5E07940E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63703749-F83E-4DB8-932C-8F5E07940E8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

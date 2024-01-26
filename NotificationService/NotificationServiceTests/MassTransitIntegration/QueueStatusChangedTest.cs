@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NotificationService.Consumers;
 using NotyficationService;
 
+
 namespace NotificationServiceTests.MassTransitIntegration;
 
 public class QueueStatusChangedTest
