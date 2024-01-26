@@ -92,9 +92,13 @@ public class QueueRocketLeagueLobbyTest
             Assert.Fail("Failed to create user account");
 
         var userQueueInfo = new UserQueueInfo(userId);
-        userQueueInfo.SetStatusNotInQueue(DateTime.UtcNow);
-        var rocketLeagueRank = RocketLeagueRank.Create("BRONZE", "I", "III");
-        var userRank = UserGameRank.Create(userId, rocketLeague2vs2Rank: rocketLeagueRank);
+        userQueueInfo
+            .SetStatusNotInQueue(DateTime.UtcNow);
+
+        var rocketLeagueRank = RocketLeagueRank
+            .Create("BRONZE", "I", "III");
+        var userRank = UserGameRank
+            .Create(userId, rocketLeague2vs2Rank: rocketLeagueRank);
 
         var invalidModeRequest = new QueueRequestCommand(
                 "invalid",
@@ -102,13 +106,7 @@ public class QueueRocketLeagueLobbyTest
                 new RocketLeagueRankDto("BRONZE", "III", "III"),
                 QueueRegion.ENG,
                 RocketLeaguePlatform.STEAM);
-
-        //var invalidQueueRegion = new QueueRequestCommand(
-        //        "TwoVSTwo",
-        //        new RocketLeagueRankDto("BRONZE", "I", "I"),
-        //        new RocketLeagueRankDto("BRONZE", "III", "III"),
-        //        (QueueRegion)10,
-        //        RocketLeaguePlatform.STEAM);
+      
 
         var differentPlatform = new QueueRequestCommand(
                 "TwoVSTwo",
@@ -118,11 +116,11 @@ public class QueueRocketLeagueLobbyTest
                 RocketLeaguePlatform.EPIC);
 
         var command = new QueueRequestCommand(
-            "TwoVSTwo",
-            new RocketLeagueRankDto("BRONZE", "I", "I"),
-            new RocketLeagueRankDto("BRONZE", "III", "III"),
-            QueueRegion.ENG,
-            RocketLeaguePlatform.STEAM);
+                "TwoVSTwo",
+                new RocketLeagueRankDto("BRONZE", "I", "I"),
+                new RocketLeagueRankDto("BRONZE", "III", "III"),
+                QueueRegion.ENG,
+                RocketLeaguePlatform.STEAM);
 
 
         using (var contextMock = _utils.dbContext())
@@ -154,12 +152,6 @@ public class QueueRocketLeagueLobbyTest
             await Assert.ThrowsAsync<ArgumentException>(async () => await queueRocketLeagueLobby.Handle(invalidModeRequest, CancellationToken.None));
         }
 
-        //using (var contextMock = _utils.dbContext())
-        //{
-        //    var queueRocketLeagueLobby = new QueueRocketLeagueLobby(publisherMock.Object, _utils.ClaimsPrincipal, contextMock);
-
-        //    await Assert.ThrowsAsync<ArgumentException>(async () => await queueRocketLeagueLobby.Handle(invalidQueueRegion, CancellationToken.None));
-        //}
 
         using (var contextMock = _utils.dbContext())
         {
