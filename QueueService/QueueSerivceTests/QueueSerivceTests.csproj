@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QueueService\QueueService.csproj" />
+    <ProjectReference Include="..\QueueService.csproj" />
   </ItemGroup>
 
 </Project>

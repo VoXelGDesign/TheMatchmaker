@@ -355,7 +355,6 @@ public class RocketLeagueQueueTest
         await hostedService.StopAsync(token);
     }
 
-
     [Fact]
     public async Task Queue_ShoudlMatchRequests_WhenModeIs3vs3()
     {

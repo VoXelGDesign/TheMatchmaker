@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="QueueSerivceTests\**" />
+    <Content Remove="QueueSerivceTests\**" />
+    <EmbeddedResource Remove="QueueSerivceTests\**" />
+    <None Remove="QueueSerivceTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
