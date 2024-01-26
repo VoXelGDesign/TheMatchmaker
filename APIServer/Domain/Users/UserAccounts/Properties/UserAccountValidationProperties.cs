@@ -10,6 +10,8 @@ namespace Domain.Users.UserAccounts.Properties
 
         internal static readonly Regex DiscordNameRegex = new Regex(@"^[a-zA-Z0-9]{2,32}$");
 
+        internal static readonly Regex EpicNameRegex = new Regex(@"^[a-zA-Z0-9]{3,16}$");
+
         internal const int MaxNameLength = 25;
 
         internal const int MinNameLength = 4;

@@ -57,6 +57,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EpicName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -307,6 +311,11 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Player1_DiscordName");
 
+                            b1.Property<string>("EpicName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Player1_EpicName");
+
                             b1.Property<bool>("IsReady")
                                 .HasColumnType("bit");
 
@@ -341,6 +350,11 @@ namespace Infrastructure.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Player2_DiscordName");
+
+                            b1.Property<string>("EpicName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Player2_EpicName");
 
                             b1.Property<bool>("IsReady")
                                 .HasColumnType("bit");
@@ -386,6 +400,11 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Player1_DiscordName");
 
+                            b1.Property<string>("EpicName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Player1_EpicName");
+
                             b1.Property<bool>("IsReady")
                                 .HasColumnType("bit");
 
@@ -421,6 +440,11 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Player2_DiscordName");
 
+                            b1.Property<string>("EpicName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Player2_EpicName");
+
                             b1.Property<bool>("IsReady")
                                 .HasColumnType("bit");
 
@@ -455,6 +479,11 @@ namespace Infrastructure.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Player3_DiscordName");
+
+                            b1.Property<string>("EpicName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Player3_EpicName");
 
                             b1.Property<bool>("IsReady")
                                 .HasColumnType("bit");

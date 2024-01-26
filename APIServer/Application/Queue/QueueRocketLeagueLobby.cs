@@ -19,7 +19,8 @@ public record QueueRequestCommand(
     string Mode,
     RocketLeagueRankDto lowerBoundRank,
     RocketLeagueRankDto upperBoundRank,
-    QueueRegion Region) : IRequest;
+    QueueRegion Region,
+    RocketLeaguePlatform Platform) : IRequest;
 
 public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 {
@@ -47,11 +48,16 @@ public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 
         var queueRequest = new QueueRocketLeagueLobbyRequestDto();
 
-        var userRanks = await _dbContext.UserGameRanks.SingleOrDefaultAsync(x => x.UserId == userId);
+        var userRanks = await _dbContext.UserGameRanks
+            .SingleOrDefaultAsync(x => x.UserId == userId);
 
-        var queueInfo = await _dbContext.UserQueueInfos.SingleOrDefaultAsync(x => x.UserId == userId);
+        var queueInfo = await _dbContext.UserQueueInfos
+            .SingleOrDefaultAsync(x => x.UserId == userId);
 
-        if(queueInfo is null)
+        var userAccount = await _dbContext.UserAccounts
+            .SingleOrDefaultAsync(x => x.Id == userId);
+
+        if (queueInfo is null)
         {
             queueInfo = new UserQueueInfo(userId);
             _dbContext.UserQueueInfos.Add(queueInfo);
@@ -64,6 +70,15 @@ public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
 
         if (userRanks is null || queueInfo is null)
             throw new ResourceMissingException();
+
+        if(request.Platform ==  RocketLeaguePlatform.STEAM 
+            && userAccount?.SteamProfileLink.Link == "EMPTY")
+            throw new ResourceMissingException();
+
+        if (request.Platform == RocketLeaguePlatform.EPIC
+            && userAccount?.EpicName.Name == "EMPTY")
+            throw new ResourceMissingException();
+
 
         RocketLeagueRank? userRank;
 
@@ -113,6 +128,7 @@ public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
         queueRequest.UpperBoundRank = upperBound;
 
         queueRequest.Region = request.Region;
+        queueRequest.Platform = request.Platform;
 
         await _publisher.PublishAsync(queueRequest);
     }

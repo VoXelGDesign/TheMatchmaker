@@ -36,9 +36,9 @@ public class GetUserAccountInfoHandler : IRequestHandler<GetUserAccountInfoQuery
 
         if (userAccountInfo is null)
         {
-            return new GetUserAccountInfoResponse(null, null);
+            return new GetUserAccountInfoResponse(null, null, null, null);
         }
 
-        return new GetUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
+        return new GetUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name, userAccountInfo.EpicName.Name);
     }
 }

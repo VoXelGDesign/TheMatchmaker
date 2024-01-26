@@ -27,6 +27,10 @@ internal class UserAccountConfiguration : IEntityTypeConfiguration<UserAccount>
             name => name.Name,
             name => UserDiscordName.Create(name)!);
 
+        builder.Property(u => u.EpicName).HasConversion(
+            name => name.Name,
+            name => UserEpicName.Create(name)!);
+
     }
 }
 

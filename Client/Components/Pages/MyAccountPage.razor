@@ -30,6 +30,7 @@
                         <MudText Typo="Typo.h3"><b>@myAccount?.Name</b></MudText>
                         <MudText Typo="Typo.body2"><b>@myAccount?.DiscordName</b></MudText>
                         <MudText Color="Color.Primary" Typo="Typo.body2"><b>@myAccount?.SteamProfileLink</b></MudText>
+                        <MudText Typo="Typo.body2"><b>@myAccount?.EpicName</b></MudText>
                     </MudItem>
 
                 }
@@ -65,6 +66,12 @@
                                       Immediate="true"
                                       Label="Steam profile link"
                                       HelperText="Insert link to steam profile"
+                                      Variant="Variant.Filled" />
+                        <MudTextField @bind-Value="updateAccountRequest.EpicName"
+                                      For="@(() => updateAccountRequest.EpicName)"
+                                      Immediate="true"
+                                      Label="Epic Name"
+                                      HelperText="Insert name from epic"
                                       Variant="Variant.Filled" />
                     </MudCardContent>
                 </MudForm>
@@ -235,6 +242,9 @@
 
             RuleFor(x => x.SteamProfileLink)
                 .Matches(@"^https:\/\/steamcommunity\.com\/id\/[a-zA-Z0-9]+\/?$")
+                .WithMessage("Please enter correct steam user profile link");
+
+            RuleFor(x => x.EpicName).Matches(@"^[a-zA-Z0-9]{3,16}$")
                 .WithMessage("Please enter correct steam user profile link");
 
         }

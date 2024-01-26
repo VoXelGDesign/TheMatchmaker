@@ -10,6 +10,7 @@ public record RocketLeaguePlayerDto
     public string UserAccountSteamProfileLink { get; set; }
 
     public string DiscordName { get; set; }
+    public string EpicName { get; set; }
     public bool IsReady { get; set; }
 
     public RocketLeaguePlayerDto(
@@ -17,12 +18,14 @@ public record RocketLeaguePlayerDto
     string userAccountName,
     string userAccountSteamProfileLink,
     string discordName,
+    string epicName,
     bool isReady)
     {
         UserIdDto = userIdDto;
         UserAccountName = userAccountName;
         UserAccountSteamProfileLink = userAccountSteamProfileLink;
         DiscordName = discordName;
+        EpicName = epicName;
         IsReady = isReady;
     }
     

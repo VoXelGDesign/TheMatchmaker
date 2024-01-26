@@ -2,8 +2,6 @@
 using Contracts.QueueContracts;
 using Contracts.QueueContracts.RocketLeague;
 using Contracts.QueueContracts.RocketLeague.Ranks;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.ObjectPool;
 using QueueService.Publishers.CreateRocketLeagueLobby;
 using QueueService.Publishers.JoinedQueue;
 using QueueService.Publishers.RemovedFromQueue;
@@ -123,6 +121,7 @@ public class RocketLeagueQueue : BackgroundService
             => QueueRequests.Where(x =>
                     x.Mode == checkedRequest.Mode &&
                     x.Region == checkedRequest.Region &&
+                    x.Platform == checkedRequest.Platform &&
                     IsRankWithinBounds(checkedRequest.UserRank, x.LowerBoundRank, x.UpperBoundRank) &&
                     IsRankWithinBounds(x.UserRank, checkedRequest.LowerBoundRank, checkedRequest.UpperBoundRank)
                 );

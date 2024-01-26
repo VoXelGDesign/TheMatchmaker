@@ -11,5 +11,6 @@ public record QueueRocketLeagueLobbyRequestDto
     public QueueRocketLeagueRankDto LowerBoundRank { get; set; }
     public QueueRocketLeagueRankDto UpperBoundRank { get; set; }
     public QueueRegion Region { get; set; }
-    public DateTime DateTime { get; set; } = DateTime.UtcNow; 
+    public DateTime DateTime { get; set; } = DateTime.UtcNow;   
+    public RocketLeaguePlatform Platform { get; set; }
 }

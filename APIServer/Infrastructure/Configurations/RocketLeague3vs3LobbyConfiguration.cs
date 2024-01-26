@@ -42,6 +42,12 @@ namespace Infrastructure.Configurations
                     name => UserDiscordName.Create(name)!)
                 .HasColumnName("Player1_DiscordName");
 
+                playerBuilder.Property(u => u.EpicName)
+                .HasConversion(
+                    name => name.Name,
+                    name => UserEpicName.Create(name)!)
+                .HasColumnName("Player1_EpicName");
+
             });
 
             builder.OwnsOne(x => x.Player2, playerBuilder =>
@@ -71,6 +77,12 @@ namespace Infrastructure.Configurations
                     name => UserDiscordName.Create(name)!)
                 .HasColumnName("Player2_DiscordName");
 
+                playerBuilder.Property(u => u.EpicName)
+                .HasConversion(
+                    name => name.Name,
+                    name => UserEpicName.Create(name)!)
+                .HasColumnName("Player2_EpicName");
+
             });
 
             builder.OwnsOne(x => x.Player3, playerBuilder =>
@@ -99,6 +111,12 @@ namespace Infrastructure.Configurations
                     name => name.Name,
                     name => UserDiscordName.Create(name)!)
                 .HasColumnName("Player3_DiscordName");
+
+                playerBuilder.Property(u => u.EpicName)
+                .HasConversion(
+                    name => name.Name,
+                    name => UserEpicName.Create(name)!)
+                .HasColumnName("Player3_EpicName");
 
             });
         }

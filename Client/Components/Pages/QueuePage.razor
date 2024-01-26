@@ -22,17 +22,25 @@
                         <MudSelectItem Value="@(RocketLeagueQueueMode.TwoVSTwo)">2 vs 2</MudSelectItem>
                         <MudSelectItem Value="@(RocketLeagueQueueMode.ThreeVSThree)">3 vs 3</MudSelectItem>
                     </MudSelect>
-                    <MudSelect @bind-Value="region" Label="Select Your Language" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+
+                    <MudSelect @bind-Value="region" Label="Select Your Language" HelperText="ex. ENG" Placeholder="@Icons.Material.Filled.Language" AdornmentIcon="@Icons.Material.Filled.Language" AdornmentColor="Color.Secondary">
                         @foreach (QueueRegion item in Enum.GetValues(typeof(QueueRegion)))
                         {
                                 <MudSelectItem Value="@item">@item</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect @bind-Value="platform" Label="Select Your Platform" HelperText="ex. STEAM" Placeholder="Please Select Platform" AdornmentIcon="@Icons.Material.Filled.VideogameAsset" AdornmentColor="Color.Secondary">
+                        @foreach (RocketLeaguePlatform item in Enum.GetValues(typeof(RocketLeaguePlatform)))
+                        {
+                            <MudSelectItem Value="@item">@item</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudText Color="Color.Secondary">Set Lower Bound Rank: </MudText>
-                    <MudSelect @bind-Value="lowerBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                    <MudSelect @bind-Value="lowerBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
                         @foreach (QueueRocketLeagueRankName item in Enum.GetValues(typeof(QueueRocketLeagueRankName)))
                         {
                             if (upperBound.RocketLeagueRankName >= item)
@@ -43,7 +51,7 @@
                     </MudSelect>
                     @if (lowerBound.RocketLeagueRankName != QueueRocketLeagueRankName.SUPERSONICLEGEND)
                     {
-                        <MudSelect @bind-Value="lowerBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelect @bind-Value="lowerBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
 
                             @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
                             {
@@ -54,7 +62,7 @@
                             }
 
                         </MudSelect>
-                        <MudSelect @bind-Value="lowerBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelect @bind-Value="lowerBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
 
                             @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
                             {
@@ -72,7 +80,7 @@
                 {
                     <MudItem xs="12" md="6">
                         <MudText Color="Color.Secondary">Set upper bound  rank: </MudText>
-                        <MudSelect @bind-Value="upperBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                        <MudSelect @bind-Value="upperBound.RocketLeagueRankName" Label="Select Your Lower Bound Rank Name" HelperText="ex. Bronze" Placeholder="Please Select Lower Bound Rank Name" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
                             @foreach (QueueRocketLeagueRankName item in Enum.GetValues(typeof(QueueRocketLeagueRankName)))
                             {
                                 if (lowerBound.RocketLeagueRankName <= item)
@@ -83,7 +91,7 @@
                         </MudSelect>
                         @if (upperBound.RocketLeagueRankName != QueueRocketLeagueRankName.SUPERSONICLEGEND)
                         {
-                            <MudSelect @bind-Value="upperBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                            <MudSelect @bind-Value="upperBound.RocketLeagueRankNumber" Label="Select Your Lower Bound Rank Number" HelperText="ex. I" Placeholder="Please Select Lower Bound Rank Number" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
 
                                 @foreach (QueueRocketLeagueRankNumber item in Enum.GetValues(typeof(QueueRocketLeagueRankNumber)))
                                 {
@@ -94,7 +102,7 @@
                                 }
 
                             </MudSelect>
-                            <MudSelect @bind-Value="upperBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.BarChart" AdornmentColor="Color.Secondary">
+                            <MudSelect @bind-Value="upperBound.RocketLeagueDivision" Label="Select Your Lower Bound Rank Division" HelperText="ex. IV" Placeholder="Please Select Lower Bound Rank Division" AdornmentIcon="@Icons.Material.Filled.Shield" AdornmentColor="Color.Secondary">
 
                                 @foreach (QueueRocketLeagueDivision item in Enum.GetValues(typeof(QueueRocketLeagueDivision)))
                                 {
@@ -126,6 +134,7 @@
     private Task<AuthenticationState>? AuthState { get; set; }
 
     private QueueRegion region { get; set; }
+    private RocketLeaguePlatform platform { get; set; }
 
     private QueueRocketLeagueRank lowerBound = new()
     {
@@ -180,7 +189,8 @@
                 Mode = mode.ToString(),
                 LowerBound = lowerDto,
                 UpperBound = upperDto,
-                QueueRegion = region
+                QueueRegion = region,
+                Platform = platform
             };
 
 

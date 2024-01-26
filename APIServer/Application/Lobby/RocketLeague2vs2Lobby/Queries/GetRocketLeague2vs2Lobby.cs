@@ -43,6 +43,7 @@ public class GetRocketLeague2vs2Lobby : IRequestHandler<GetRocketLeague2vs2Lobby
             lobby.Player1.UserAccountName.Name.ToString(),
             lobby.Player1.UserAccountSteamProfileLink.Link.ToString(),
             lobby.Player1.DiscordName.Name.ToString(),
+            lobby.Player1.EpicName.Name.ToString(),
             lobby.Player1.IsReady
             );
 
@@ -51,6 +52,7 @@ public class GetRocketLeague2vs2Lobby : IRequestHandler<GetRocketLeague2vs2Lobby
             lobby.Player2.UserAccountName.Name.ToString(),
             lobby.Player2.UserAccountSteamProfileLink.Link.ToString(),
             lobby.Player2.DiscordName.Name.ToString(),
+            lobby.Player2.EpicName.Name.ToString(),
             lobby.Player2.IsReady
             );       
 

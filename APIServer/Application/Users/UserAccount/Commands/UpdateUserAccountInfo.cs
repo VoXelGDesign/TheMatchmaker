@@ -42,24 +42,27 @@ public class UpdateUserAccountInfoHandler : IRequestHandler<UpdateUserAccountInf
 
         var discordName = UserDiscordName.Create(request.dto.DiscordName);
 
+        var epicName = UserEpicName.Create(request.dto.EpicName);
+
         if (userAccountInfo == null)
         {
             userAccountInfo = Domain.Users.UserAccounts.UserAccount.Create(
                 userAccountId,
                 name ?? UserAccountName.Default(),
                 link ?? UserAccountSteamProfileLink.Default(),
-                discordName ?? UserDiscordName.Default())
+                discordName ?? UserDiscordName.Default(),
+                epicName ?? UserEpicName.Default())
                 ?? throw new ResourceCreationFailedException();
 
             _applicationDbContext.UserAccounts.Add(userAccountInfo);
             await _applicationDbContext.SaveChangesAsync();
         }
 
-        userAccountInfo.UpdateUserAccount(name, link, discordName);
+        userAccountInfo.UpdateUserAccount(name, link, discordName, epicName);
 
         await _applicationDbContext.SaveChangesAsync();
 
-        return new UpdateUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name);
+        return new UpdateUserAccountInfoResponse(userAccountInfo.Name.Name, userAccountInfo.SteamProfileLink.Link, userAccountInfo.DiscordName.Name, userAccountInfo.EpicName.Name);
     }
 }
 

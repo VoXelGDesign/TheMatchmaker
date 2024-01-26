@@ -9,6 +9,7 @@ public class RocketLeaguePlayer
     public UserAccountName UserAccountName { get; private set; } = null!;
     public UserAccountSteamProfileLink UserAccountSteamProfileLink { get; private set; } = null!;
     public UserDiscordName DiscordName { get; private set; } = null!;
+    public UserEpicName EpicName { get; private set; } = null!;
     public bool IsReady { get; private set; } = false;
 
     public static RocketLeaguePlayer Create(UserAccount userAccount)
@@ -18,6 +19,7 @@ public class RocketLeaguePlayer
         UserAccountName = userAccount.Name,
         UserAccountSteamProfileLink = userAccount.SteamProfileLink,
         DiscordName = userAccount.DiscordName,
+        EpicName = userAccount.EpicName,
     };
     public void SetReady() 
         => IsReady = true;

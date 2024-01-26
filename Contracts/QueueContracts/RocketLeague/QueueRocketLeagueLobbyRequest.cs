@@ -11,6 +11,7 @@ public record QueueRocketLeagueLobbyRequest
     public QueueRocketLeagueRank LowerBoundRank { get; set; }
     public QueueRocketLeagueRank UpperBoundRank { get; set; }
     public QueueRegion Region { get; set; }
+    public RocketLeaguePlatform Platform { get; set; }
     public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
     public static QueueRocketLeagueLobbyRequest? CreateFromDto(QueueRocketLeagueLobbyRequestDto dto)
@@ -30,7 +31,8 @@ public record QueueRocketLeagueLobbyRequest
             UpperBoundRank = upperBound,
             UserRank = userRank,
             DateTime = dto.DateTime,
-            Region = dto.Region
+            Region = dto.Region,
+            Platform = dto.Platform
         };
     }
 }
