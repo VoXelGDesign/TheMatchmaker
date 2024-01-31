@@ -68,15 +68,21 @@ public class QueueRocketLeagueLobby : IRequestHandler<QueueRequestCommand>
         var mode = (RocketLeagueQueueMode)Enum.Parse(typeof(RocketLeagueQueueMode), request.Mode);
         
 
-        if (userRanks is null || queueInfo is null)
+        if (userRanks is null || queueInfo is null || userAccount is null)
             throw new ResourceMissingException();
 
-        if(request.Platform ==  RocketLeaguePlatform.STEAM 
-            && userAccount?.SteamProfileLink.Link == "EMPTY")
+        if(userAccount.Name.Name == "EMPTY")
+            throw new ResourceMissingException();
+
+        if (userAccount.DiscordName.Name == "EMPTY")
+            throw new ResourceMissingException();
+
+        if (request.Platform ==  RocketLeaguePlatform.STEAM 
+            && userAccount.SteamProfileLink.Link == "EMPTY")
             throw new ResourceMissingException();
 
         if (request.Platform == RocketLeaguePlatform.EPIC
-            && userAccount?.EpicName.Name == "EMPTY")
+            && userAccount.EpicName.Name == "EMPTY")
             throw new ResourceMissingException();
 
 
