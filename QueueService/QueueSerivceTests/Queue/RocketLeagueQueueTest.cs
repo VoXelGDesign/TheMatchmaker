@@ -141,7 +141,7 @@ public class RocketLeagueQueueTest
     }
 
     [Fact]
-    public async Task Queue_ShouldMatchAtLeast600RequestsUnder10Seconds_WhenAllPosibbleToMatch()
+    public async Task Queue_ShouldMatchAtLeast1000Requests_WhenAllPosibbleToMatch()
     {
         var rank = QueueRocketLeagueRank.Create(new QueueRocketLeagueRankDto("GOLD", "I", "I"));
         var loweRank = QueueRocketLeagueRank.Create(new QueueRocketLeagueRankDto("BRONZE", "I", "I"));
@@ -151,7 +151,7 @@ public class RocketLeagueQueueTest
 
         var listOfRequests = new List<QueueRocketLeagueLobbyRequest>();
 
-        for (int i = 0; i < 600; i++)
+        for (int i = 0; i < 1000; i++)
         {
             var request = new QueueRocketLeagueLobbyRequest
             {
@@ -191,18 +191,18 @@ public class RocketLeagueQueueTest
 
         await hostedService.StartAsync(token);
 
-        foreach (var request in listOfRequests)
-        {
-            await hostedService.AddToQueue(request);
+        for (int i = 0; i < 1000; i++)
+        {         
+            await hostedService.AddToQueue(listOfRequests[i]);
         }
 
-        await Task.Delay(10000);
+        await Task.Delay(60000);
         var service = serviceProvider
         .GetRequiredService<ICreateRocketLeagueLobbyPublisher>();
 
         var mock = Mock.Get(service);
 
-        mock.Verify(x => x.PublishAsync(It.IsAny<CreateRocketLeagueLobbyRequest>()), Times.Exactly(300));
+        mock.Verify(x => x.PublishAsync(It.IsAny<CreateRocketLeagueLobbyRequest>()), Times.Exactly(500));
 
         await hostedService.StopAsync(token);
     }

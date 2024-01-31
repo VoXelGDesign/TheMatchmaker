@@ -10,7 +10,7 @@ using QueueService.Publishers.RemovedFromQueue;
 namespace QueueService;
 
 public class RocketLeagueQueue : BackgroundService
-{
+{   
     private List<QueueRocketLeagueLobbyRequest> QueueRequests = new();   
     private readonly ICreateRocketLeagueLobbyPublisher _createRocketLeagueLobbyPublisher;
     private readonly IRemovedFromQueuePublisher _removedFromQueuePublisher;
@@ -56,8 +56,8 @@ public class RocketLeagueQueue : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(30, stoppingToken);           
-
+            await Task.Delay(100, stoppingToken);           
+            
             if (QueueRequests.Count < 1)
                 continue;
 
