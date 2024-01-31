@@ -28,6 +28,8 @@ public sealed record UserAccountSteamProfileLink
 
     private static bool IsValidLink(string? link)
     {
+        if(link == "EMPTY")
+            return true;
 
         if (string.IsNullOrEmpty(link))
         {
