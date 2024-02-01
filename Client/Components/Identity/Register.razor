@@ -25,14 +25,15 @@
                     <MudTextField @bind-Value="model.Email"
                                   For="@(() => model.Email)"
                                   Immediate="true"
-                                  Label="Email" />
+                                  Label="Email"
+                                  HelperText="ex. johndoe@gmail.com" />
 
                     <MudTextField @bind-Value="model.Password"
                                   For="@(() => model.Password)"
                                   InputType="InputType.Password"
                                   Immediate="true"
-                                  Label="Password" 
-                                  HelperText="ex. johndoe@gmail.com"
+                                  Label="Password"
+                                  HelperText="ex. Thematchmaker123!"
                                   Variant="Variant.Filled"/>
 
                     <MudTextField @bind-Value="model.ConfirmPassword"
